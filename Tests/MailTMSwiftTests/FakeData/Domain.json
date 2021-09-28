@@ -1,0 +1,11 @@
+{
+    "@context": "/contexts/Domain",
+    "@id": "/domains/613f72dc2a2501052c66504d",
+    "@type": "Domain",
+    "id": "613f72dc2a2501052c66504d",
+    "domain": "uniromax.com",
+    "isActive": true,
+    "isPrivate": false,
+    "createdAt": "2021-09-13T00:00:00+00:00",
+    "updatedAt": "2021-09-13T00:00:00+00:00"
+}

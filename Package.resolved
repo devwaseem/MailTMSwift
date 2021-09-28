@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "LDSwiftEventSource",
+        "repositoryURL": "https://github.com/LaunchDarkly/swift-eventsource.git",
+        "state": {
+          "branch": null,
+          "revision": "7c40adad054c9737afadffe42a2ce0bbcfa02f48",
+          "version": "1.2.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -1,0 +1,48 @@
+{
+    "@context": "/contexts/Message",
+    "@id": "/messages/6140df9033dbfcd61d71b3f9",
+    "@type": "Message",
+    "id": "6140df9033dbfcd61d71b3f9",
+    "accountId": "/accounts/6140db437eb15d095b7107e6",
+    "msgid": "<CAHwEYXL+eGaFJWkA7rVtQnb5GhZ0EwXNc5xE361rpXKBsAmJ=Q@mail.gmail.com>",
+    "from": {
+        "address": "waseem07799@gmail.com",
+        "name": "waseem akram"
+    },
+    "to": [
+        {
+            "address": "randommmmm@uniromax.com",
+            "name": ""
+        }
+    ],
+    "cc": [],
+    "bcc": [],
+    "subject": "Fwd: Test attachment",
+    "seen": true,
+    "flagged": false,
+    "isDeleted": false,
+    "verifications": [],
+    "retention": true,
+    "retentionDate": "2021-09-21T17:44:48+00:00",
+    "text": "",
+    "html": [
+        "<div dir=\"ltr\"><br><br><div class=\"gmail_quote\"><div dir=\"ltr\"><div class=\"gmail_quote\"><div dir=\"ltr\"><div class=\"gmail_quote\"><div dir=\"ltr\"><br></div>\r\n</div></div>\r\n</div></div>\r\n</div></div>"
+    ],
+    "hasAttachments": true,
+    "attachments": [
+        {
+            "id": "ATTACH000001",
+            "filename": "4375105_logo_swift_icon.svg",
+            "contentType": "image/svg+xml",
+            "disposition": "attachment",
+            "transferEncoding": "base64",
+            "related": false,
+            "size": 1,
+            "downloadUrl": "/messages/6140df9033dbfcd61d71b3f9/attachment/ATTACH000001"
+        }
+    ],
+    "size": 4991,
+    "downloadUrl": "/messages/6140df9033dbfcd61d71b3f9/download",
+    "createdAt": "2021-09-14T17:40:42+00:00",
+    "updatedAt": "2021-09-14T17:47:00+00:00"
+}

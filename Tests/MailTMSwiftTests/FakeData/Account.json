@@ -1,0 +1,13 @@
+{
+    "@context": "/contexts/Account",
+    "@id": "/accounts/6140db437eb15d095b7107e6",
+    "@type": "Account",
+    "id": "6140db437eb15d095b7107e6",
+    "address": "example@uniromax.com",
+    "quota": 40000000,
+    "used": 4991,
+    "isDisabled": false,
+    "isDeleted": false,
+    "createdAt": "2021-09-14T17:26:27+00:00",
+    "updatedAt": "2021-09-14T17:26:27+00:00"
+}
