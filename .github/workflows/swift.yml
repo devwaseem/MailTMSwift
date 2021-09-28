@@ -1,0 +1,25 @@
+name: Swift
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '.github/workflows/swiftlint.yml'
+      - '.swiftlint.yml'
+      - '**/*.swift
+
+jobs:
+  build:
+
+    runs-on: macos-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: GitHub Action for SwiftLint
+        uses: norio-nomura/action-swiftlint@3.2.1
+    - name: Build
+      run: swift build -v
+    - name: Run tests
+      run: swift test -v
