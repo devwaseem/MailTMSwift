@@ -13,15 +13,15 @@ public struct MTAccount: Codable {
     public let quotaLimit, quotaUsed: Int
     public let isDisabled, isDeleted: Bool
     public let createdAt, updatedAt: Date
-    
+
     public var isQuotaLimitReached: Bool {
         quotaUsed >= quotaLimit
     }
-    
+
     public var quotaUsedPercetage: Float {
         min(Float(quotaUsed)/Float(quotaLimit), 1)
     }
-    
+
     public init(id: String, address: String, quotaLimit: Int, quotaUsed: Int, isDisabled: Bool, isDeleted: Bool, createdAt: Date, updatedAt: Date) {
         self.id = id
         self.address = address
@@ -32,12 +32,11 @@ public struct MTAccount: Codable {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case quotaLimit = "quota"
         case quotaUsed = "used"
         case id, isDisabled, isDeleted, createdAt, updatedAt, address
     }
-    
-}
 
+}

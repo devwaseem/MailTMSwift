@@ -12,8 +12,7 @@ public enum MTError: Error, LocalizedError {
     case mtError(String)
     case encodingError(String)
     case decodingError(String)
-    
-    
+
     public var errorDescription: String? {
         switch self {
         case .mtError(let error):
@@ -27,4 +26,3 @@ public enum MTError: Error, LocalizedError {
         }
     }
 }
-

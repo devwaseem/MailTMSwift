@@ -9,13 +9,13 @@ import Foundation
 import Combine
 
 open class MTDomainService {
-    
+
     private let apiService: APIServiceProtocol
-    
+
     init(apiService: APIServiceProtocol) {
         self.apiService = apiService
     }
-    
+
     public init() {
         self.apiService = APIService(session: .shared,
                                      encoder: MTJSONEncoder(),
@@ -38,7 +38,7 @@ open class MTDomainService {
     open func getDomain(id: String, completion: @escaping (Result<MTDomain, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.domainFromId(id), authToken: nil, headers: [:], completion: completion)
     }
-    
+
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -57,7 +57,5 @@ open class MTDomainService {
     open func getDomain(id: String) -> AnyPublisher<MTDomain, MTError> {
         apiService.get(endpoint: Endpoints.domainFromId(id), authToken: nil, headers: [:])
     }
-        
+
 }
-
-

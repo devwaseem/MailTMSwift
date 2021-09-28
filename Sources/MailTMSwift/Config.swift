@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 enum Config {
     static var baseURL = "https://api.mail.tm"
     static var sseURL = "https://mercure.mail.tm/.well-known/mercure"

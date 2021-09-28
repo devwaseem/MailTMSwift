@@ -10,17 +10,17 @@ import XCTest
 @testable import MailTMSwift
 
 class MTDomainTests: XCTestCase {
-        
+
     var decoder: MTJSONDecoder!
-    
+
     override func setUp() {
         decoder = MTJSONDecoder()
     }
-    
+
     override func tearDown() {
         decoder = nil
     }
-    
+
     // MARK: - Lifecycle Tests
     func test_init() {
         let givenId = "12345"
@@ -33,21 +33,20 @@ class MTDomainTests: XCTestCase {
                                    isPrivate: false,
                                    createdAt: givenCreatedAtDate,
                                    updatedAt: givenUpdatedAtDate)
-        
+
         XCTAssertEqual(sut.id, givenId)
         XCTAssertEqual(sut.domain, givenDomain)
         XCTAssertEqual(sut.isActive, false)
         XCTAssertEqual(sut.isPrivate, false)
         XCTAssertEqual(sut.createdAt, givenCreatedAtDate)
         XCTAssertEqual(sut.updatedAt, givenUpdatedAtDate)
-        
-        
+
     }
-    
+
     // MARK: - Decodable Tests
-    
+
     func test_MTDomain_decodesSingleDomain_successfullyFromJSON() throws {
-        
+
         let url = Bundle.module.bundleURL.appendingPathComponent("Contents/Resources/FakeData/Domain.json")
 
         let json = try Data(contentsOf: url)
@@ -64,10 +63,10 @@ class MTDomainTests: XCTestCase {
         XCTAssertEqual(decodedDomain.isActive, true)
         XCTAssertEqual(decodedDomain.isPrivate, false)
     }
-    
+
     func test_MTDomain_decodesMultipleDomain_successfullyFromJSON() throws {
         let url = Bundle.module.bundleURL.appendingPathComponent("Contents/Resources/FakeData/Domains.json")
-        
+
         let json = try Data(contentsOf: url)
         let decodedDomains: [MTDomain]!
         do {
@@ -81,5 +80,5 @@ class MTDomainTests: XCTestCase {
         XCTAssertEqual(decodedDomains.count, 1)
         XCTAssertEqual(decodedDomains[0].id, "613f72dc2a2501052c66504d")
     }
-    
+
 }

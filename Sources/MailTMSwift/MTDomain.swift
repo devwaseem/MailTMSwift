@@ -8,12 +8,11 @@
 import Foundation
 
 public struct MTDomain: Codable {
-    
-    
+
     public let id, domain: String
     public let isActive, isPrivate: Bool
     public let createdAt, updatedAt: Date
-    
+
     public init(id: String, domain: String, isActive: Bool, isPrivate: Bool, createdAt: Date, updatedAt: Date) {
         self.id = id
         self.domain = domain
@@ -22,7 +21,7 @@ public struct MTDomain: Codable {
         self.createdAt = createdAt
         self.updatedAt = updatedAt
     }
-    
+
     enum CodingKeys: String, CodingKey {
         case id = "id" // id key needed to differentiate id from @id field in JSON.
         case domain, isActive, isPrivate, createdAt, updatedAt
@@ -30,4 +29,3 @@ public struct MTDomain: Codable {
 }
 
 extension MTDomain: Hashable, Identifiable {}
-

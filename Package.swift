@@ -9,13 +9,13 @@ let package = Package(
         .macOS(.v10_12),
         .iOS(.v11),
         .watchOS(.v4),
-        .tvOS(.v11),
+        .tvOS(.v11)
     ],
     products: [
         // Products define the executables and libraries a package produces, and make them visible to other packages.
         .library(
             name: "MailTMSwift",
-            targets: ["MailTMSwift"]),
+            targets: ["MailTMSwift"])
     ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
@@ -34,12 +34,11 @@ let package = Package(
             name: "MailTMSwiftTests",
             dependencies: ["MailTMSwift"],
             resources: [
-                .copy("FakeData"),
+                .copy("FakeData")
             ]
         ),
         .testTarget(
             name: "MailTMSwift-BlackboxTests",
-            dependencies: ["MailTMSwift"]),
+            dependencies: ["MailTMSwift"])
     ]
 )
-

@@ -8,7 +8,7 @@
 import Foundation
 
 public struct MTMessage: Codable {
-    
+
     public let id: String
     public let msgid: String
     public let from: MTMessageUser
@@ -25,7 +25,7 @@ public struct MTMessage: Codable {
     public let size: Int
     public let downloadURL: String
     public let createdAt, updatedAt: Date
-    
+
     public init(id: String,
                 msgid: String,
                 from: MTMessageUser,
@@ -77,13 +77,13 @@ public struct MTMessage: Codable {
 }
 
 public struct MTAttachment: Codable {
-    
+
     public let id, filename, contentType, disposition: String
     public let transferEncoding: String
     public let related: Bool
     public let size: Int
     public let downloadURL: String
-    
+
     public init(id: String, filename: String, contentType: String, disposition: String, transferEncoding: String, related: Bool, size: Int, downloadURL: String) {
         self.id = id
         self.filename = filename
@@ -103,19 +103,19 @@ public struct MTAttachment: Codable {
 
 public struct MTMessageUser: Codable {
     public let address, name: String
-    
+
     public init(address: String, name: String) {
         self.address = address
         self.name = name
     }
-    
+
 }
 
 extension MTMessage: Hashable, Identifiable {
     public static func == (lhs: MTMessage, rhs: MTMessage) -> Bool {
         lhs.id == rhs.id
     }
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(id)
         hasher.combine(msgid)
@@ -137,22 +137,19 @@ extension MTMessage: Hashable, Identifiable {
         hasher.combine(bcc)
         hasher.combine(subject)
     }
-    
 
 }
 
-
 extension MTAttachment: Hashable, Identifiable {
-    
+
     public static func == (lhs: MTAttachment, rhs: MTAttachment) -> Bool {
         lhs.id == rhs.id
     }
-    
+
 }
 
-
 extension MTMessageUser: Hashable {
-    
+
     public func hash(into hasher: inout Hasher) {
         hasher.combine(address)
         hasher.combine(name)

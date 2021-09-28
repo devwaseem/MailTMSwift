@@ -17,13 +17,12 @@ extension APIService {
         MTAPIServiceGetPublisher(apiService: self, endpoint: endpoint, authToken: authToken, headers: [:])
             .eraseToAnyPublisher()
     }
-    
+
     func request<T: Decodable, E: Encodable>(method: APIRequestMethod, endpoint: String, authToken: String? = nil, headers: [String: String] = [:], body: E?)  -> AnyPublisher<T, MTError> {
         MTAPIServiceRequestPublisher(apiService: self, method: method, endpoint: endpoint, authToken: authToken, headers: headers, body: body)
             .eraseToAnyPublisher()
     }
 }
-
 
 // MARK: - Get Publishers
 
@@ -48,7 +47,7 @@ struct MTAPIServiceGetPublisher<T: Decodable>: Publisher {
         self.headers = headers
     }
 
-    func receive<S>(subscriber: S) where S : Subscriber, MTError == S.Failure, Output == S.Input {
+    func receive<S>(subscriber: S) where S: Subscriber, MTError == S.Failure, Output == S.Input {
         let subscription = MTAPIServiceGetSubscription(subscriber: subscriber,
                                                     apiService: apiService,
                                                     endpoint: endpoint,
@@ -56,7 +55,6 @@ struct MTAPIServiceGetPublisher<T: Decodable>: Publisher {
                                                     headers: headers)
         subscriber.receive(subscription: subscription)
     }
-
 
 }
 
@@ -73,7 +71,7 @@ final class MTAPIServiceGetSubscription<S: Subscriber, T: Decodable>: Subscripti
     let endpoint: String
     let authToken: String?
     let headers: [String: String]
-    
+
     var task: MTAPIServiceTaskProtocol?
 
     init(subscriber: S, apiService: APIService, endpoint: String, authToken: String?, headers: [String: String]) {
@@ -106,7 +104,6 @@ final class MTAPIServiceGetSubscription<S: Subscriber, T: Decodable>: Subscripti
 
 // MARK: - Request Publishers
 
-
 @available(macOS 10.15, *)
 @available(iOS 13.0, *)
 @available(watchOS 6.0, *)
@@ -132,11 +129,10 @@ struct MTAPIServiceRequestPublisher<T: Decodable, E: Encodable>: Publisher {
         self.body = body
     }
 
-    func receive<S>(subscriber: S) where S : Subscriber, MTError == S.Failure, Output == S.Input {
+    func receive<S>(subscriber: S) where S: Subscriber, MTError == S.Failure, Output == S.Input {
         let subscription = MTAPIServiceRequestSubscription(subscriber: subscriber, apiService: apiService, method: method, endpoint: endpoint, authToken: authToken, headers: headers, body: body)
         subscriber.receive(subscription: subscription)
     }
-
 
 }
 
@@ -155,7 +151,7 @@ final class MTAPIServiceRequestSubscription<S: Subscriber, T: Decodable, E: Enco
     let authToken: String?
     let headers: [String: String]
     let body: E?
-    
+
     var task: MTAPIServiceTaskProtocol?
 
     init(subscriber: S, apiService: APIService, method: APIRequestMethod, endpoint: String, authToken: String?, headers: [String: String], body: E?) {
@@ -169,7 +165,7 @@ final class MTAPIServiceRequestSubscription<S: Subscriber, T: Decodable, E: Enco
     }
 
     func request(_ demand: Subscribers.Demand) {
-        
+
         self.task = apiService.request(method: method, endpoint: endpoint, authToken: authToken, headers: headers, body: body) { (result: Result<T, MTError>) in
             switch result {
                 case .failure(let error):

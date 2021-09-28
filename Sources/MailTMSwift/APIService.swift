@@ -13,17 +13,17 @@ enum APIRequestMethod: String {
     case post = "POST"
     case patch = "PATCH"
     case delete = "DELETE"
-         
+
 }
 
 struct EmptyBody: Codable {
-    
+
 }
 
 typealias APIResultClosure<T> = (Result<T, MTError>) -> Void
 
 protocol APIServiceProtocol {
-    
+
     @discardableResult
     func get<T: Decodable>(endpoint: String,
                            authToken: String?,
@@ -36,13 +36,13 @@ protocol APIServiceProtocol {
                                                 headers: [String: String],
                                                 body: In?,
                                                 completion: @escaping APIResultClosure<Res>) -> MTAPIServiceTaskProtocol
-    
+
     @available(tvOS 13.0, *)
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     func get<T: Decodable>(endpoint: String, authToken: String?, headers: [String: String]) -> AnyPublisher<T, MTError>
-    
+
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -51,11 +51,11 @@ protocol APIServiceProtocol {
 }
 
 final class APIService: APIServiceProtocol {
-        
+
     let encoder: JSONEncoder
     let decoder: JSONDecoder
     let session: URLSession
-    
+
     init(session: URLSession = .shared, encoder: JSONEncoder = .init(), decoder: JSONDecoder = .init()) {
         self.encoder = encoder
         self.decoder = decoder
@@ -67,7 +67,7 @@ final class APIService: APIServiceProtocol {
             self.session.configuration.waitsForConnectivity = true
         }
     }
-    
+
     @discardableResult
     func get<T: Decodable>(endpoint: String, authToken: String? = nil, headers: [String: String] = [:], completion: @escaping APIResultClosure<T>) -> MTAPIServiceTaskProtocol {
         guard let url = URL(string: endpoint) else {
@@ -84,13 +84,13 @@ final class APIService: APIServiceProtocol {
             guard let self = self else { return }
             self.handleAPIOutput(data: data, response: response, error: error, completion: completion)
         }
-        
+
         task.resume()
         return MTAPIServiceTask(sessionTask: task)
     }
-    
+
     @discardableResult
-    func request<In: Encodable, Res: Decodable>(method: APIRequestMethod = .post, endpoint: String,  authToken: String? = nil, headers: [String: String] = [:], body: In?, completion: @escaping APIResultClosure<Res>) -> MTAPIServiceTaskProtocol {
+    func request<In: Encodable, Res: Decodable>(method: APIRequestMethod = .post, endpoint: String, authToken: String? = nil, headers: [String: String] = [:], body: In?, completion: @escaping APIResultClosure<Res>) -> MTAPIServiceTaskProtocol {
         guard let url = URL(string: endpoint) else {
             fatalError("Invalid url passed: \(endpoint)")
         }
@@ -111,21 +111,21 @@ final class APIService: APIServiceProtocol {
         }
         return bodyTypeRequest(request: request, completion: completion)
     }
-    
+
     internal func handleAPIOutput<T: Decodable>(data: Data?, response: URLResponse?, error: Error?, completion: @escaping APIResultClosure<T>) {
-        
+
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
             if let error = error {
                 completion(.failure(MTError.networkError(error.localizedDescription)))
                 return
             }
-            
+
             if let tempData = data, let hydraError = try? self.decoder.decode(MTHydraError.self, from: tempData) {
                 completion(.failure(MTError.mtError(hydraError.hydraDescription)))
                 return
             }
-            
+
             guard
                 let response = response as? HTTPURLResponse,
                 (200..<300) ~= response.statusCode
@@ -133,12 +133,12 @@ final class APIService: APIServiceProtocol {
                 completion(.failure(MTError.networkError("Something went wrong: Status code \((response as? HTTPURLResponse)?.statusCode ?? 0)")))
                 return
             }
-            
+
             guard let data = data else {
                 completion(.failure(MTError.networkError("Data recevied was empty")))
                 return
             }
-            
+
             do {
                 print(String(describing: T.self))
                 let result = try self.decoder.decode(T.self, from: data)
@@ -149,20 +149,18 @@ final class APIService: APIServiceProtocol {
             }
         }
     }
-    
+
     internal func bodyTypeRequest<T: Decodable>(request: URLRequest, completion: @escaping APIResultClosure<T>) -> MTAPIServiceTaskProtocol {
         let task = session.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             self.handleAPIOutput(data: data, response: response, error: error, completion: completion)
         }
-        
+
         task.resume()
         return MTAPIServiceTask(sessionTask: task)
     }
-    
-    
-}
 
+}
 
 public protocol MTAPIServiceTaskProtocol {
     var taskId: UUID { get }
@@ -171,26 +169,25 @@ public protocol MTAPIServiceTaskProtocol {
 
 public final class MTAPIServiceTask: MTAPIServiceTaskProtocol {
     private let sessionTask: URLSessionDataTask
-    
+
     public var taskId: UUID
-    
+
     public init(sessionTask: URLSessionDataTask) {
         self.taskId = UUID()
         self.sessionTask = sessionTask
     }
-    
+
     public func cancel() {
         sessionTask.cancel()
     }
 }
 
 public final class APIPlaceholderServiceTask: MTAPIServiceTaskProtocol {
-    
+
     public var taskId: UUID = UUID()
-    
+
     public func cancel() {
         // do nothing
     }
-    
-}
 
+}

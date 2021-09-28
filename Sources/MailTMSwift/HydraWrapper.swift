@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct HydraWrapper<T>: Codable where T : Codable {
+struct HydraWrapper<T>: Codable where T: Codable {
     let context, id, type: String
     let result: T
     let hydraTotalItems: Int
@@ -21,7 +21,5 @@ struct HydraWrapper<T>: Codable where T : Codable {
     }
 }
 
-
-//randommmmm@uniromax.com
-//helo12312312
-
+// randommmmm@uniromax.com
+// helo12312312

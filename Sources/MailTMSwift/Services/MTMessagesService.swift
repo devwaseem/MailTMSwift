@@ -8,19 +8,19 @@
 import Foundation
 
 open class MTMessageService {
-    
+
     private let apiService: APIServiceProtocol
-    
+
     init(apiService: APIServiceProtocol) {
         self.apiService = apiService
     }
-    
+
     public init() {
         self.apiService = APIService(session: .shared,
                                      encoder: MTJSONEncoder(),
                                      decoder: MTJSONDecoder())
     }
-    
+
     @discardableResult
     public func getAllMessages(token: String, page: Int = 1, completion: @escaping (Result<[MTMessage], MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         guard var urlComponent = URLComponents(string: Endpoints.messages) else {
@@ -44,17 +44,17 @@ open class MTMessageService {
         }
     }
     @discardableResult
-    public func deleteMessage(token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void)  -> MTAPIServiceTaskProtocol {
+    public func deleteMessage(token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .delete, endpoint: Endpoints.messagesFromId(id), authToken: token, headers: [:], body: EmptyBody(), completion: completion)
     }
-    
+
     @discardableResult
-    public func getMessage(token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void)  -> MTAPIServiceTaskProtocol {
+    public func getMessage(token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.messagesFromId(id), authToken: token, headers: [:], completion: completion)
     }
-    
+
     @discardableResult
-    public func markMessageAs(seen: Bool, token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void)  -> MTAPIServiceTaskProtocol {
+    public func markMessageAs(seen: Bool, token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .patch,
                            endpoint: Endpoints.messagesFromId(id),
                            authToken: token,
@@ -62,5 +62,5 @@ open class MTMessageService {
                            body: ["seen": seen],
                            completion: completion)
     }
-    
+
 }

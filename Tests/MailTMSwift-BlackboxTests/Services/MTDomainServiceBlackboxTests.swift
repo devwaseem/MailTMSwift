@@ -9,30 +9,27 @@ import Foundation
 import XCTest
 @testable import MailTMSwift
 
-
 class MTDomainServiceBlackboxTests: XCTestCase {
-    
-    
+
     var sut: MTDomainService!
-    
+
     override func setUp() {
         sut = MTDomainService()
     }
-    
+
     override func tearDown() {
         sut = nil
     }
-    
-    
+
     func test_getAllDomains_returnsDomains() throws {
-        
+
         let getAllDomainsExpectation = expectation(description: "getAllDomains did not return domains")
         var returnedResultOptional: Result<[MTDomain], MTError>!
         sut.getAllDomains { result in
             returnedResultOptional = result
             getAllDomainsExpectation.fulfill()
         }
-        
+
         waitForExpectations(timeout: 5)
         let returnedResult = try XCTUnwrap(returnedResultOptional)
         switch returnedResult {
@@ -51,7 +48,7 @@ class MTDomainServiceBlackboxTests: XCTestCase {
             XCTAssertTrue(domains.count > 0)
         }
     }
-    
+
     func test_getDomainFromId_returnsDomain() throws {
         let givenId = "613f72dc2a2501052c66504d"
         let getAllDomainsExpectation = expectation(description: "getAllDomains did not return domains")
@@ -60,7 +57,7 @@ class MTDomainServiceBlackboxTests: XCTestCase {
             returnedResultOptional = result
             getAllDomainsExpectation.fulfill()
         }
-        
+
         waitForExpectations(timeout: 5)
         let returnedResult = try XCTUnwrap(returnedResultOptional)
         switch returnedResult {
@@ -79,6 +76,5 @@ class MTDomainServiceBlackboxTests: XCTestCase {
             XCTAssertEqual(domain.id, givenId)
         }
     }
-    
-}
 
+}

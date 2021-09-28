@@ -9,19 +9,19 @@ import Foundation
 import Combine
 
 open class MTAccountService {
-    
+
     private let apiService: APIServiceProtocol
-    
+
     init(apiService: APIServiceProtocol) {
         self.apiService = apiService
     }
-    
+
     public init() {
         self.apiService = APIService(session: .shared,
                                      encoder: MTJSONEncoder(),
                                      decoder: MTJSONDecoder())
     }
-    
+
     @discardableResult
     open func login(using auth: MTAuth, completion: @escaping (Result<String, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .post, endpoint: Endpoints.token, authToken: nil, headers: [:], body: auth) {
@@ -34,7 +34,7 @@ open class MTAccountService {
             }
         }
     }
-    
+
     @discardableResult
     open func createAccount(using auth: MTAuth, completion: @escaping (Result<MTAccount, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(
@@ -45,7 +45,7 @@ open class MTAccountService {
             body: auth,
             completion: completion)
     }
-    
+
     @discardableResult
     open func getMyAccount(token: String, completion: @escaping (Result<MTAccount, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.myAccount,
@@ -53,7 +53,7 @@ open class MTAccountService {
                        headers: [:],
                        completion: completion)
     }
-    
+
     @discardableResult
     open func deleteAccount(id: String, token: String, completion: @escaping (Result<MTAccount, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .delete,
@@ -63,7 +63,7 @@ open class MTAccountService {
                            body: EmptyBody(),
                            completion: completion)
     }
-    
+
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -74,7 +74,7 @@ open class MTAccountService {
             .map(\.token)
             .eraseToAnyPublisher()
     }
-    
+
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -82,7 +82,7 @@ open class MTAccountService {
     open func createAccount(using auth: MTAuth) -> AnyPublisher<MTAccount, MTError> {
         apiService.request(method: .post, endpoint: Endpoints.account, authToken: nil, headers: [:], body: auth)
     }
-    
+
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -90,7 +90,7 @@ open class MTAccountService {
     open func getMyAccount(token: String) -> AnyPublisher<MTAccount, MTError> {
         apiService.get(endpoint: Endpoints.myAccount, authToken: token, headers: [:])
     }
-    
+
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -98,7 +98,5 @@ open class MTAccountService {
     open func deleteAccount(id: String, token: String) -> AnyPublisher<MTAccount, MTError> {
         apiService.request(method: .delete, endpoint: Endpoints.myAccount, authToken: token, headers: [:], body: EmptyBody())
     }
-    
+
 }
-
-
