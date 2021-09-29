@@ -84,7 +84,14 @@ public struct MTAttachment: Codable {
     public let size: Int
     public let downloadURL: String
 
-    public init(id: String, filename: String, contentType: String, disposition: String, transferEncoding: String, related: Bool, size: Int, downloadURL: String) {
+    public init(id: String,
+                filename: String,
+                contentType: String,
+                disposition: String,
+                transferEncoding: String,
+                related: Bool,
+                size: Int,
+                downloadURL: String) {
         self.id = id
         self.filename = filename
         self.contentType = contentType

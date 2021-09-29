@@ -24,8 +24,11 @@ open class MTAccountService {
 
     @discardableResult
     open func login(using auth: MTAuth, completion: @escaping (Result<String, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
-        apiService.request(method: .post, endpoint: Endpoints.token, authToken: nil, headers: [:], body: auth) {
-            (result: Result<MTToken, MTError>) in
+        apiService.request(method: .post,
+                           endpoint: Endpoints.token,
+                           authToken: nil,
+                           headers: [:],
+                           body: auth) { (result: Result<MTToken, MTError>) in
             switch result {
             case .success(let token):
                 completion(.success(token.token))
@@ -69,7 +72,12 @@ open class MTAccountService {
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
     open func login(using auth: MTAuth) -> AnyPublisher<String, MTError> {
-        let publisher: AnyPublisher<MTToken, MTError> = apiService.request(method: .post, endpoint: Endpoints.token, authToken: nil, headers: [:], body: auth)
+        let publisher: AnyPublisher<MTToken, MTError> = apiService
+            .request(method: .post,
+                     endpoint: Endpoints.token,
+                     authToken: nil,
+                     headers: [:],
+                     body: auth)
         return publisher
             .map(\.token)
             .eraseToAnyPublisher()

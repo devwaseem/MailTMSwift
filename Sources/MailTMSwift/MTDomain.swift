@@ -23,8 +23,10 @@ public struct MTDomain: Codable {
     }
 
     enum CodingKeys: String, CodingKey {
+        // swiftlint:disable redundant_string_enum_value
         case id = "id" // id key needed to differentiate id from @id field in JSON.
         case domain, isActive, isPrivate, createdAt, updatedAt
+        // swiftlint:enable redundant_string_enum_value
     }
 }
 

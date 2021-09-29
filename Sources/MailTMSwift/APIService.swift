@@ -16,9 +16,7 @@ enum APIRequestMethod: String {
 
 }
 
-struct EmptyBody: Codable {
-
-}
+struct EmptyBody: Codable {}
 
 typealias APIResultClosure<T> = (Result<T, MTError>) -> Void
 
@@ -47,7 +45,11 @@ protocol APIServiceProtocol {
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
-    func request<T: Decodable, E: Encodable>(method: APIRequestMethod, endpoint: String, authToken: String?, headers: [String: String], body: E?)  -> AnyPublisher<T, MTError>
+    func request<T: Decodable, E: Encodable>(method: APIRequestMethod,
+                                             endpoint: String,
+                                             authToken: String?,
+                                             headers: [String: String], 
+                                             body: E?)  -> AnyPublisher<T, MTError>
 }
 
 final class APIService: APIServiceProtocol {
@@ -69,7 +71,10 @@ final class APIService: APIServiceProtocol {
     }
 
     @discardableResult
-    func get<T: Decodable>(endpoint: String, authToken: String? = nil, headers: [String: String] = [:], completion: @escaping APIResultClosure<T>) -> MTAPIServiceTaskProtocol {
+    func get<T: Decodable>(endpoint: String,
+                           authToken: String? = nil,
+                           headers: [String: String] = [:],
+                           completion: @escaping APIResultClosure<T>) -> MTAPIServiceTaskProtocol {
         guard let url = URL(string: endpoint) else {
             fatalError("Invalid url passed: \(endpoint)")
         }
@@ -90,7 +95,12 @@ final class APIService: APIServiceProtocol {
     }
 
     @discardableResult
-    func request<In: Encodable, Res: Decodable>(method: APIRequestMethod = .post, endpoint: String, authToken: String? = nil, headers: [String: String] = [:], body: In?, completion: @escaping APIResultClosure<Res>) -> MTAPIServiceTaskProtocol {
+    func request<In: Encodable, Res: Decodable>(method: APIRequestMethod = .post,
+                                                endpoint: String,
+                                                authToken: String? = nil,
+                                                headers: [String: String] = [:],
+                                                body: In?,
+                                                completion: @escaping APIResultClosure<Res>) -> MTAPIServiceTaskProtocol {
         guard let url = URL(string: endpoint) else {
             fatalError("Invalid url passed: \(endpoint)")
         }
@@ -127,8 +137,8 @@ final class APIService: APIServiceProtocol {
             }
 
             guard
-                let response = response as? HTTPURLResponse,
-                (200..<300) ~= response.statusCode
+                let httpResponse = response as? HTTPURLResponse,
+                (200..<300) ~= httpResponse.statusCode
             else {
                 completion(.failure(MTError.networkError("Something went wrong: Status code \((response as? HTTPURLResponse)?.statusCode ?? 0)")))
                 return
@@ -140,7 +150,6 @@ final class APIService: APIServiceProtocol {
             }
 
             do {
-                print(String(describing: T.self))
                 let result = try self.decoder.decode(T.self, from: data)
                 completion(.success(result))
             } catch let decoderError {

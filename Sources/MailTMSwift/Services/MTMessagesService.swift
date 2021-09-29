@@ -22,7 +22,9 @@ open class MTMessageService {
     }
 
     @discardableResult
-    public func getAllMessages(token: String, page: Int = 1, completion: @escaping (Result<[MTMessage], MTError>) -> Void) -> MTAPIServiceTaskProtocol {
+    public func getAllMessages(token: String,
+                               page: Int = 1,
+                               completion: @escaping (Result<[MTMessage], MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         guard var urlComponent = URLComponents(string: Endpoints.messages) else {
             completion(.failure(.networkError("Invalid URL: \(Endpoints.messages)")))
             return APIPlaceholderServiceTask()
@@ -45,7 +47,12 @@ open class MTMessageService {
     }
     @discardableResult
     public func deleteMessage(token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
-        apiService.request(method: .delete, endpoint: Endpoints.messagesFromId(id), authToken: token, headers: [:], body: EmptyBody(), completion: completion)
+        apiService.request(method: .delete,
+                           endpoint: Endpoints.messagesFromId(id),
+                           authToken: token,
+                           headers: [:],
+                           body: EmptyBody(),
+                           completion: completion)
     }
 
     @discardableResult
@@ -54,7 +61,10 @@ open class MTMessageService {
     }
 
     @discardableResult
-    public func markMessageAs(seen: Bool, token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
+    public func markMessageAs(seen: Bool,
+                              token: String,
+                              id: String,
+                              completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .patch,
                            endpoint: Endpoints.messagesFromId(id),
                            authToken: token,
