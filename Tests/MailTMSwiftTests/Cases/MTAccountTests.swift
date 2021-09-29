@@ -52,8 +52,10 @@ class MTAccountTests: XCTestCase {
     }
 
     func test_decodesAccount_successfullyFromJSON() throws {
-
-        let url = Bundle.module.bundleURL.appendingPathComponent("Contents/Resources/FakeData/Account.json")
+        guard let url = Bundle.module.url(forResource: "Account", withExtension: "json", subdirectory: "FakeData") else {
+            XCTFail("Account.json file not found!. Bundle URL: \(Bundle.module.bundleURL)")
+            return
+        }
 
         let json = try Data(contentsOf: url)
         let decodedAccount: MTAccount!

@@ -47,7 +47,10 @@ class MTDomainTests: XCTestCase {
 
     func test_MTDomain_decodesSingleDomain_successfullyFromJSON() throws {
 
-        let url = Bundle.module.bundleURL.appendingPathComponent("Contents/Resources/FakeData/Domain.json")
+        guard let url = Bundle.module.url(forResource: "Domain", withExtension: "json", subdirectory: "FakeData") else {
+            XCTFail("Domain.json file not found!. Bundle URL: \(Bundle.module.bundleURL)")
+            return
+        }
 
         let json = try Data(contentsOf: url)
         let decodedDomain: MTDomain!
@@ -65,7 +68,10 @@ class MTDomainTests: XCTestCase {
     }
 
     func test_MTDomain_decodesMultipleDomain_successfullyFromJSON() throws {
-        let url = Bundle.module.bundleURL.appendingPathComponent("Contents/Resources/FakeData/Domains.json")
+        guard let url = Bundle.module.url(forResource: "Domains", withExtension: "json", subdirectory: "FakeData") else {
+            XCTFail("Domains.json file not found!. Bundle URL: \(Bundle.module.bundleURL)")
+            return
+        }
 
         let json = try Data(contentsOf: url)
         let decodedDomains: [MTDomain]!
