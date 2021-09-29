@@ -92,7 +92,6 @@ extension MTLiveMessagesService: EventHandler {
     }
 
     public func onMessage(eventType: String, messageEvent: MessageEvent) {
-        print(eventType, messageEvent)
         guard
             eventType == "message",
             let data = messageEvent.data.data(using: .utf8)
