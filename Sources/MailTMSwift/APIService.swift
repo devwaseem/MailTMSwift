@@ -16,9 +16,9 @@ enum APIRequestMethod: String {
 
 }
 
-struct EmptyBody: Codable {}
+struct EmptyBody: Encodable {}
 
-public struct EmptyResult: Codable {}
+public struct EmptyResult: Decodable { public init() {} }
 
 typealias APIResultClosure<T> = (Result<T, MTError>) -> Void
 

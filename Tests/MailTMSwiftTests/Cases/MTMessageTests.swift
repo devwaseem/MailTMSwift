@@ -140,7 +140,7 @@ class MTMessageTests: XCTestCase {
         XCTAssertEqual(decodedMessage.attachments[0].size, 1)
         XCTAssertEqual(decodedMessage.attachments[0].downloadURL, "/messages/6140df9033dbfcd61d71b3f9/attachment/ATTACH000001")
         XCTAssertEqual(decodedMessage.size, 4991)
-        XCTAssertEqual(decodedMessage.downloadURL, "/messages/6140df9033dbfcd61d71b3f9/download")
+        XCTAssertEqual(decodedMessage.downloadURL, nil)
         XCTAssertEqual(decodedMessage.createdAt, stringToDate(dateString: "2021-09-14T17:40:42+00:00"))
         XCTAssertEqual(decodedMessage.updatedAt, stringToDate(dateString: "2021-09-14T17:47:00+00:00"))
     }

@@ -300,18 +300,11 @@ class MTAccountServiceIntegrationTests: XCTestCase {
     // MARK: - deleteAccount tests
 
     func test_deleteAccount_whenSuccess_returnsMTAccount() throws {
-        typealias ResultType = Result<MTAccount, MTError>
+        typealias ResultType = Result<EmptyResult, MTError>
 
         // given
         let givenfakeToken = "abcdefghijk"
-        let givenResult: ResultType = .success(.init(id: "123",
-                                                     address: "example@example.com",
-                                                     quotaLimit: 100,
-                                                     quotaUsed: 10,
-                                                     isDisabled: false,
-                                                     isDeleted: false,
-                                                     createdAt: .init(),
-                                                     updatedAt: .init()))
+        let givenResult: ResultType = .success(EmptyResult())
 
         mockApi.givenResult(result: givenResult)
 
@@ -325,7 +318,7 @@ class MTAccountServiceIntegrationTests: XCTestCase {
         }
 
         // then
-        XCTAssertEqual(mockApi.endpoint, Endpoints.myAccount)
+        XCTAssertEqual(mockApi.endpoint, Endpoints.accountFromId("123"))
         XCTAssertEqual(mockApi.requestAuthToken, givenfakeToken)
         XCTAssertEqual(mockApi.headers, [:])
         XCTAssertEqual(mockApi.requestCallCount, 1)
@@ -335,15 +328,16 @@ class MTAccountServiceIntegrationTests: XCTestCase {
         XCTAssertNotNil(returnedResultOptional)
         let returnedResult = try XCTUnwrap(returnedResultOptional)
         switch returnedResult {
-        case .success(let result):
-            XCTAssertEqual(result.id, "123")
+            case .success(_):
+                // pass
+                break
         case .failure(let error):
             XCTFail(error.localizedDescription)
         }
     }
 
     func test_deleteAccount_whenFailutre_returnsError() throws {
-        typealias ResultType = Result<MTAccount, MTError>
+        typealias ResultType = Result<EmptyResult, MTError>
 
         // given
         let givenfakeToken = "abcdefghijk"
@@ -362,7 +356,7 @@ class MTAccountServiceIntegrationTests: XCTestCase {
         }
 
         // then
-        XCTAssertEqual(mockApi.endpoint, Endpoints.myAccount)
+        XCTAssertEqual(mockApi.endpoint, Endpoints.accountFromId("123"))
         XCTAssertEqual(mockApi.requestAuthToken, givenfakeToken)
         XCTAssertEqual(mockApi.headers, [:])
         XCTAssertEqual(mockApi.requestCallCount, 1)
