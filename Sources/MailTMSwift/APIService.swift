@@ -18,6 +18,8 @@ enum APIRequestMethod: String {
 
 struct EmptyBody: Codable {}
 
+public struct EmptyResult: Codable {}
+
 typealias APIResultClosure<T> = (Result<T, MTError>) -> Void
 
 protocol APIServiceProtocol {
@@ -130,8 +132,13 @@ final class APIService: APIServiceProtocol {
                 completion(.failure(MTError.networkError(error.localizedDescription)))
                 return
             }
+            
+            guard let data = data else {
+                completion(.failure(MTError.networkError("Data recevied was empty")))
+                return
+            }
 
-            if let tempData = data, let hydraError = try? self.decoder.decode(MTHydraError.self, from: tempData) {
+            if let hydraError = try? self.decoder.decode(MTHydraError.self, from: data) {
                 completion(.failure(MTError.mtError(hydraError.hydraDescription)))
                 return
             }
@@ -140,17 +147,19 @@ final class APIService: APIServiceProtocol {
                 let httpResponse = response as? HTTPURLResponse,
                 (200..<300) ~= httpResponse.statusCode
             else {
-                completion(.failure(MTError.networkError("Something went wrong: Status code \((response as? HTTPURLResponse)?.statusCode ?? 0)")))
+                completion(.failure(MTError.networkError("Something went wrong: Status code \((response as? HTTPURLResponse)?.statusCode ?? 0), Error: \(String(data: data, encoding: .utf8) ?? "")")))
                 return
             }
-
-            guard let data = data else {
-                completion(.failure(MTError.networkError("Data recevied was empty")))
-                return
+            
+            let correctedData: Data
+            if let rawString = String(data: data, encoding: .utf8), rawString == "" {
+                correctedData = "{}".data(using: .utf8) ?? data
+            } else {
+                correctedData = data
             }
 
             do {
-                let result = try self.decoder.decode(T.self, from: data)
+                let result = try self.decoder.decode(T.self, from: correctedData)
                 completion(.success(result))
             } catch let decoderError {
                 let error = MTError.decodingError(decoderError.localizedDescription)

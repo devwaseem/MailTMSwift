@@ -23,7 +23,7 @@ public struct MTMessage: Codable {
     public let hasAttachments: Bool
     public let attachments: [MTAttachment]
     public let size: Int
-    public let downloadURL: String
+    public let downloadURL: String?
     public let createdAt, updatedAt: Date
 
     public init(id: String,

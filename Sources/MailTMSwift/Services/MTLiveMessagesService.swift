@@ -98,7 +98,13 @@ extension MTLiveMessagesService: EventHandler {
         else {
             return
         }
-
+        
+        
+        // if MTAccount received, ignore the output
+        if let _ = try? decoder.decode(MTAccount.self, from: data) {
+            return
+        }
+        
         do {
             let message = try decoder.decode(MTMessage.self, from: data)
             _messagePublisher.send(.success(message))
