@@ -147,7 +147,12 @@ final class APIService: APIServiceProtocol {
                 let httpResponse = response as? HTTPURLResponse,
                 (200..<300) ~= httpResponse.statusCode
             else {
-                completion(.failure(MTError.networkError("Something went wrong: Status code \((response as? HTTPURLResponse)?.statusCode ?? 0), Error: \(String(data: data, encoding: .utf8) ?? "")")))
+                completion(.failure(
+                    MTError.networkError(
+                        "Something went wrong: Status code \((response as? HTTPURLResponse)?.statusCode ?? 0), "
+                        + "Error: \(String(data: data, encoding: .utf8) ?? "")")
+                    )
+                )
                 return
             }
             

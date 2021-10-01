@@ -54,5 +54,5 @@ identifier_name:
     - id
     - URL
     - GlobalAPIKey
-reporter: "emoji" # reporter type (xcode, json, csv, checkstyle, codeclimate, junit, html, emoji, sonarqube, markdown, github-actions-logging)
+reporter: "github-actions-logging" # reporter type (xcode, json, csv, checkstyle, codeclimate, junit, html, emoji, sonarqube, markdown, github-actions-logging)
 

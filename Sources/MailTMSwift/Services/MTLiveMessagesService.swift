@@ -99,11 +99,12 @@ extension MTLiveMessagesService: EventHandler {
             return
         }
         
-        
         // if MTAccount received, ignore the output
+        // swiftlint:disable unused_optional_binding
         if let _ = try? decoder.decode(MTAccount.self, from: data) {
             return
         }
+        // swiftlint:enable unused_optional_binding
         
         do {
             let message = try decoder.decode(MTMessage.self, from: data)
