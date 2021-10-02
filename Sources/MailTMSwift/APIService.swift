@@ -110,7 +110,9 @@ final class APIService: APIServiceProtocol {
         if let token = authToken {
             headers["Authorization"] = "Bearer \(token)"
         }
-        headers["Content-Type"] = "application/json"
+        if headers["Content-Type"] == nil {
+            headers["Content-Type"] = "application/json"
+        }
         var request = URLRequest(url: url)
         request.httpMethod = method.rawValue
         request.allHTTPHeaderFields = headers

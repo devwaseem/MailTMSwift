@@ -14,9 +14,7 @@ import LDSwiftEventSource
 @available(watchOS 6.0, *)
 @available(tvOS 13.0, *)
 @available(tvOS 13.0, *)
-open class MTLiveMessagesService {
-
-    public typealias ResultType = Result<MTMessage, MTError>
+open class MTLiveMailService {
 
     public enum State {
         case opened, closed
@@ -24,17 +22,26 @@ open class MTLiveMessagesService {
 
     private var eventSource: EventSource?
 
-    public var statePublisher: AnyPublisher<MTLiveMessagesService.State, Never> {
+    public var statePublisher: AnyPublisher<MTLiveMailService.State, Never> {
         $state.eraseToAnyPublisher()
     }
 
     @Published private var state = State.closed
 
-    public var messagePublisher: AnyPublisher<ResultType, Never> {
-        _messagePublisher.eraseToAnyPublisher()
+    public var messagePublisher: AnyPublisher<MTMessage, Never> {
+        _messagePublisher
+            .receive(on: DispatchQueue.main, options: .init(qos: .utility))
+            .eraseToAnyPublisher()
+    }
+    
+    public var accountPublisher: AnyPublisher<MTAccount, Never> {
+        _accountPublisher
+            .receive(on: DispatchQueue.main, options: .init(qos: .utility))
+            .eraseToAnyPublisher()
     }
 
-    private var _messagePublisher = PassthroughSubject<ResultType, Never>()
+    private var _messagePublisher = PassthroughSubject<MTMessage, Never>()
+    private var _accountPublisher = PassthroughSubject<MTAccount, Never>()
 
     let decoder = MTJSONDecoder()
 
@@ -78,7 +85,7 @@ open class MTLiveMessagesService {
 @available(iOS 13.0, *)
 @available(watchOS 6.0, *)
 @available(tvOS 13.0, *)
-extension MTLiveMessagesService: EventHandler {
+extension MTLiveMailService: EventHandler {
 
     public func onOpened() {
         state = .opened
@@ -92,6 +99,7 @@ extension MTLiveMessagesService: EventHandler {
     }
 
     public func onMessage(eventType: String, messageEvent: MessageEvent) {
+        print(messageEvent)
         guard
             eventType == "message",
             let data = messageEvent.data.data(using: .utf8)
@@ -99,18 +107,37 @@ extension MTLiveMessagesService: EventHandler {
             return
         }
         
-        // if MTAccount received, ignore the output
-        // swiftlint:disable unused_optional_binding
-        if let _ = try? decoder.decode(MTAccount.self, from: data) {
+        let dataType: HydraTypeResult.HydraTypeResult
+        do {
+            let result = try decoder.decode(HydraTypeResult.self, from: data)
+            if let type = HydraTypeResult.HydraTypeResult(rawValue: result.type) {
+                dataType = type
+            } else {
+                print("Unknown type: \(result.type)")
+                return
+            }
+        } catch {
+            print(error)
             return
         }
-        // swiftlint:enable unused_optional_binding
         
-        do {
-            let message = try decoder.decode(MTMessage.self, from: data)
-            _messagePublisher.send(.success(message))
-        } catch let error {
-            _messagePublisher.send(.failure(.decodingError(error.localizedDescription)))
+        switch dataType {
+        case .account:
+            do {
+                let account = try decoder.decode(MTAccount.self, from: data)
+                _accountPublisher.send(account)
+                return
+            } catch {
+                print(error)
+            }
+        case .message:
+            do {
+                let message = try decoder.decode(MTMessage.self, from: data)
+                _messagePublisher.send(message)
+                return
+            } catch let error {
+                print(error)
+            }
         }
     }
 
@@ -119,7 +146,7 @@ extension MTLiveMessagesService: EventHandler {
     }
 
     public func onError(error: Error) {
-        _messagePublisher.send(.failure(.networkError(error.localizedDescription)))
+        print(error)
     }
 
 }

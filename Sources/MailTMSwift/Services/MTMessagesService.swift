@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 open class MTMessageService {
 
@@ -39,7 +40,7 @@ open class MTMessageService {
         return apiService.get(endpoint: fullUrl, authToken: token, headers: [:]) { (result: Result<HydraWrapper<[MTMessage]>, MTError>) in
             switch result {
             case .success(let data):
-                completion(.success(data.result))
+                completion(.success(data.result ?? []))
             case .failure(let error):
                 completion(.failure(error))
             }
@@ -68,9 +69,76 @@ open class MTMessageService {
         apiService.request(method: .patch,
                            endpoint: Endpoints.messagesFromId(id),
                            authToken: token,
-                           headers: [:],
+                           headers: ["Content-Type": "application/merge-patch+json"],
                            body: ["seen": seen],
                            completion: completion)
+    }
+    
+    @available(macOS 10.15, *)
+    @available(iOS 13.0, *)
+    @available(watchOS 6.0, *)
+    @available(tvOS 13.0, *)
+    public func getAllMessages(token: String,
+                               page: Int = 1) -> AnyPublisher<[MTMessage], MTError> {
+        guard var urlComponent = URLComponents(string: Endpoints.messages) else {
+            return Deferred {
+                Future { promise in
+                    promise(.failure(.networkError("Invalid URL: \(Endpoints.messages)")))
+                }
+            }.eraseToAnyPublisher()
+        }
+        
+        urlComponent.queryItems = [
+            URLQueryItem(name: "page", value: String(page))
+        ]
+        
+        guard let fullUrl = urlComponent.url?.absoluteString else {
+            return Deferred {
+                Future { promise in
+                    promise(.failure(.networkError("Invalid URL: \(Endpoints.messages)")))
+                }
+            }.eraseToAnyPublisher()
+        }
+        
+        let publisher: AnyPublisher<HydraWrapper<[MTMessage]>, MTError> = apiService.get(endpoint: fullUrl, authToken: token, headers: [:])
+        return publisher
+            .map(\.result)
+            .replaceNil(with: [])
+            .eraseToAnyPublisher()
+    }
+    
+    @available(macOS 10.15, *)
+    @available(iOS 13.0, *)
+    @available(watchOS 6.0, *)
+    @available(tvOS 13.0, *)
+    public func deleteMessage(token: String, id: String) -> AnyPublisher<MTMessage, MTError> {
+        apiService.request(method: .delete,
+                           endpoint: Endpoints.messagesFromId(id),
+                           authToken: token,
+                           headers: [:],
+                           body: EmptyBody())
+    }
+
+    @available(macOS 10.15, *)
+    @available(iOS 13.0, *)
+    @available(watchOS 6.0, *)
+    @available(tvOS 13.0, *)
+    public func getMessage(token: String, id: String) -> AnyPublisher<MTMessage, MTError> {
+        apiService.get(endpoint: Endpoints.messagesFromId(id), authToken: token, headers: [:])
+    }
+
+    @available(macOS 10.15, *)
+    @available(iOS 13.0, *)
+    @available(watchOS 6.0, *)
+    @available(tvOS 13.0, *)
+    public func markMessageAs(seen: Bool,
+                              token: String,
+                              id: String) -> AnyPublisher<MTMessage, MTError> {
+        apiService.request(method: .patch,
+                           endpoint: Endpoints.messagesFromId(id),
+                           authToken: token,
+                           headers: ["Content-Type": "application/merge-patch+json"],
+                           body: ["seen": seen])
     }
 
 }

@@ -29,7 +29,7 @@ open class MTDomainService {
             case .failure(let error):
                 completion(.failure(error))
             case .success(let data):
-                completion(.success(data.result))
+                completion(.success(data.result ?? []))
             }
         }
     }
@@ -47,6 +47,7 @@ open class MTDomainService {
         let publisher: AnyPublisher<HydraWrapper<[MTDomain]>, MTError> = apiService.get(endpoint: Endpoints.domains, authToken: nil, headers: [:])
         return publisher
             .map(\.result)
+            .replaceNil(with: [])
             .eraseToAnyPublisher()
     }
 

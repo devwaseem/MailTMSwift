@@ -13,15 +13,16 @@ public struct MTMessage: Codable {
     public let msgid: String
     public let from: MTMessageUser
     public let to: [MTMessageUser]
-    public let cc, bcc: [MTMessageUser]
+    public let cc, bcc: [MTMessageUser]?
     public let subject: String
     public let seen, flagged, isDeleted: Bool
-    public let retention: Bool
-    public let retentionDate: Date
-    public let text: String
-    public let html: [String]
+    public let retention: Bool?
+    public let retentionDate: Date?
+    public var intro: String?
+    public let text: String?
+    public let html: [String]?
     public let hasAttachments: Bool
-    public let attachments: [MTAttachment]
+    public let attachments: [MTAttachment]?
     public let size: Int
     public let downloadURL: String?
     public let createdAt, updatedAt: Date
@@ -38,6 +39,7 @@ public struct MTMessage: Codable {
                 isDeleted: Bool,
                 retention: Bool,
                 retentionDate: Date,
+                intro: String,
                 text: String,
                 html: [String],
                 hasAttachments: Bool,
@@ -58,6 +60,7 @@ public struct MTMessage: Codable {
         self.isDeleted = isDeleted
         self.retention = retention
         self.retentionDate = retentionDate
+        self.intro = intro
         self.text = text
         self.html = html
         self.hasAttachments = hasAttachments
@@ -72,7 +75,32 @@ public struct MTMessage: Codable {
         case id = "id"
         case downloadURL = "downloadUrl"
         case createdAt, updatedAt
-        case msgid, from, to, cc, bcc, subject, seen, flagged, isDeleted, retention, retentionDate, text, html, hasAttachments, attachments, size
+        case msgid, from, to, cc, bcc, subject, seen, flagged, isDeleted, retention, retentionDate, intro, text, html, hasAttachments, attachments, size
+    }
+    
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(String.self, forKey: .id)
+        self.msgid = try container.decode(String.self, forKey: .msgid)
+        self.from = try container.decode(MTMessageUser.self, forKey: .from)
+        self.to = try container.decode([MTMessageUser].self, forKey: .to)
+        self.cc = try container.decodeIfPresent([MTMessageUser].self, forKey: .cc) ?? []
+        self.bcc = try container.decodeIfPresent([MTMessageUser].self, forKey: .bcc) ?? []
+        self.subject = try container.decode(String.self, forKey: .subject)
+        self.seen = try container.decodeIfPresent(Bool.self, forKey: .seen) ?? false
+        self.flagged = try container.decodeIfPresent(Bool.self, forKey: .flagged) ?? false
+        self.isDeleted = try container.decodeIfPresent(Bool.self, forKey: .isDeleted) ?? false
+        self.retention = try container.decodeIfPresent(Bool.self, forKey: .retention)
+        self.retentionDate = try container.decodeIfPresent(Date.self, forKey: .retentionDate)
+        self.intro = try container.decodeIfPresent(String.self, forKey: .intro)
+        self.text = try container.decodeIfPresent(String.self, forKey: .text)
+        self.html = try container.decodeIfPresent([String].self, forKey: .html)
+        self.hasAttachments = try container.decode(Bool.self, forKey: .hasAttachments)
+        self.attachments = try container.decodeIfPresent([MTAttachment].self, forKey: .attachments) ?? []
+        self.size = try container.decode(Int.self, forKey: .size)
+        self.downloadURL = try container.decodeIfPresent(String.self, forKey: .downloadURL)
+        self.createdAt = try container.decode(Date.self, forKey: .createdAt)
+        self.updatedAt = try container.decode(Date.self, forKey: .updatedAt)
     }
 }
 

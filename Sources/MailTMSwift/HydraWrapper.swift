@@ -8,9 +8,9 @@
 import Foundation
 
 struct HydraWrapper<T>: Codable where T: Codable {
-    let context, id, type: String
-    let result: T
-    let hydraTotalItems: Int
+    let context, id, type: String?
+    let result: T?
+    let hydraTotalItems: Int?
 
     enum CodingKeys: String, CodingKey {
         case context = "@context"
@@ -18,6 +18,20 @@ struct HydraWrapper<T>: Codable where T: Codable {
         case type = "@type"
         case result = "hydra:member"
         case hydraTotalItems = "hydra:totalItems"
+    }
+}
+
+struct HydraTypeResult: Codable {
+    
+    enum HydraTypeResult: String {
+        case message = "Message"
+        case account = "Account"
+    }
+    
+    let type: String
+
+    enum CodingKeys: String, CodingKey {
+        case type = "@type"
     }
 }
 
