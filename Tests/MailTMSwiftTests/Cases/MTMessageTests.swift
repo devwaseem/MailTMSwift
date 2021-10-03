@@ -37,6 +37,7 @@ class MTMessageTests: XCTestCase {
         let givenIsDeleted = true
         let givenRetention = true
         let givenRetentionDate = Date()
+        let givenIntro = "test-intro"
         let givenText = "test-text"
         let givenHtml = ["test-html"]
         let givenHasAttachment = true
@@ -58,6 +59,7 @@ class MTMessageTests: XCTestCase {
                             isDeleted: givenIsDeleted,
                             retention: givenRetention,
                             retentionDate: givenRetentionDate,
+                            intro: givenIntro,
                             text: givenText,
                             html: givenHtml,
                             hasAttachments: givenHasAttachment,
@@ -79,6 +81,7 @@ class MTMessageTests: XCTestCase {
         XCTAssertEqual(sut.isDeleted, givenIsDeleted)
         XCTAssertEqual(sut.retention, givenRetention)
         XCTAssertEqual(sut.retentionDate, givenRetentionDate)
+        XCTAssertEqual(sut.intro, givenIntro)
         XCTAssertEqual(sut.text, givenText)
         XCTAssertEqual(sut.html, givenHtml)
         XCTAssertEqual(sut.hasAttachments, givenHasAttachment)
@@ -119,8 +122,8 @@ class MTMessageTests: XCTestCase {
         XCTAssertEqual(decodedMessage.to.count, 1)
         XCTAssertEqual(decodedMessage.to[0].address, "randommmmm@uniromax.com")
         XCTAssertEqual(decodedMessage.to[0].name, "")
-        XCTAssertEqual(decodedMessage.cc.count, 0)
-        XCTAssertEqual(decodedMessage.bcc.count, 0)
+        XCTAssertEqual(decodedMessage.cc?.count ?? -1, 0)
+        XCTAssertEqual(decodedMessage.bcc?.count ?? -1, 0)
         XCTAssertEqual(decodedMessage.subject, "Fwd: Test attachment")
         XCTAssertEqual(decodedMessage.seen, true)
         XCTAssertEqual(decodedMessage.flagged, false)
@@ -128,17 +131,17 @@ class MTMessageTests: XCTestCase {
         XCTAssertEqual(decodedMessage.retention, true)
         XCTAssertEqual(decodedMessage.retentionDate, stringToDate(dateString: "2021-09-21T17:44:48+00:00"))
         XCTAssertEqual(decodedMessage.text, "")
-        XCTAssertEqual(decodedMessage.html.count, 1)
+        XCTAssertEqual(decodedMessage.html?.count, 1)
         XCTAssertEqual(decodedMessage.hasAttachments, true)
-        XCTAssertEqual(decodedMessage.attachments.count, 1)
-        XCTAssertEqual(decodedMessage.attachments[0].id, "ATTACH000001")
-        XCTAssertEqual(decodedMessage.attachments[0].filename, "4375105_logo_swift_icon.svg")
-        XCTAssertEqual(decodedMessage.attachments[0].contentType, "image/svg+xml")
-        XCTAssertEqual(decodedMessage.attachments[0].disposition, "attachment")
-        XCTAssertEqual(decodedMessage.attachments[0].transferEncoding, "base64")
-        XCTAssertEqual(decodedMessage.attachments[0].related, false)
-        XCTAssertEqual(decodedMessage.attachments[0].size, 1)
-        XCTAssertEqual(decodedMessage.attachments[0].downloadURL, "/messages/6140df9033dbfcd61d71b3f9/attachment/ATTACH000001")
+        XCTAssertEqual(decodedMessage.attachments?.count, 1)
+        XCTAssertEqual(decodedMessage.attachments?[0].id, "ATTACH000001")
+        XCTAssertEqual(decodedMessage.attachments?[0].filename, "4375105_logo_swift_icon.svg")
+        XCTAssertEqual(decodedMessage.attachments?[0].contentType, "image/svg+xml")
+        XCTAssertEqual(decodedMessage.attachments?[0].disposition, "attachment")
+        XCTAssertEqual(decodedMessage.attachments?[0].transferEncoding, "base64")
+        XCTAssertEqual(decodedMessage.attachments?[0].related, false)
+        XCTAssertEqual(decodedMessage.attachments?[0].size, 1)
+        XCTAssertEqual(decodedMessage.attachments?[0].downloadURL, "/messages/6140df9033dbfcd61d71b3f9/attachment/ATTACH000001")
         XCTAssertEqual(decodedMessage.size, 4991)
         XCTAssertEqual(decodedMessage.downloadURL, nil)
         XCTAssertEqual(decodedMessage.createdAt, stringToDate(dateString: "2021-09-14T17:40:42+00:00"))

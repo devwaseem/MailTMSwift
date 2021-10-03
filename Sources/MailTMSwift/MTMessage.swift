@@ -75,7 +75,9 @@ public struct MTMessage: Codable {
         case id = "id"
         case downloadURL = "downloadUrl"
         case createdAt, updatedAt
-        case msgid, from, to, cc, bcc, subject, seen, flagged, isDeleted, retention, retentionDate, intro, text, html, hasAttachments, attachments, size
+        case msgid, from, to, cc, bcc, subject, seen
+        case flagged, isDeleted, retention, retentionDate
+        case intro, text, html, hasAttachments, attachments, size
     }
     
     public init(from decoder: Decoder) throws {

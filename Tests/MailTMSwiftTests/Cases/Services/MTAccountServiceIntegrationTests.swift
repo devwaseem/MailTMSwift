@@ -300,11 +300,11 @@ class MTAccountServiceIntegrationTests: XCTestCase {
     // MARK: - deleteAccount tests
 
     func test_deleteAccount_whenSuccess_returnsMTAccount() throws {
-        typealias ResultType = Result<EmptyResult, MTError>
+        typealias ResultType = Result<MTEmptyResult, MTError>
 
         // given
         let givenfakeToken = "abcdefghijk"
-        let givenResult: ResultType = .success(EmptyResult())
+        let givenResult: ResultType = .success(MTEmptyResult())
 
         mockApi.givenResult(result: givenResult)
 
@@ -337,7 +337,7 @@ class MTAccountServiceIntegrationTests: XCTestCase {
     }
 
     func test_deleteAccount_whenFailutre_returnsError() throws {
-        typealias ResultType = Result<EmptyResult, MTError>
+        typealias ResultType = Result<MTEmptyResult, MTError>
 
         // given
         let givenfakeToken = "abcdefghijk"

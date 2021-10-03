@@ -58,12 +58,12 @@ open class MTAccountService {
     }
 
     @discardableResult
-    open func deleteAccount(id: String, token: String, completion: @escaping (Result<EmptyResult, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
+    open func deleteAccount(id: String, token: String, completion: @escaping (Result<MTEmptyResult, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .delete,
                            endpoint: Endpoints.accountFromId(id),
                            authToken: token,
                            headers: [:],
-                           body: EmptyBody(),
+                           body: MTEmptyBody(),
                            completion: completion)
     }
 
@@ -103,8 +103,8 @@ open class MTAccountService {
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
-    open func deleteAccount(id: String, token: String) -> AnyPublisher<EmptyResult, MTError> {
-        apiService.request(method: .delete, endpoint: Endpoints.accountFromId(id), authToken: token, headers: [:], body: EmptyBody())
+    open func deleteAccount(id: String, token: String) -> AnyPublisher<MTEmptyResult, MTError> {
+        apiService.request(method: .delete, endpoint: Endpoints.accountFromId(id), authToken: token, headers: [:], body: MTEmptyBody())
     }
 
 }

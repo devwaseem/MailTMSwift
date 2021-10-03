@@ -45,6 +45,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
                   isDeleted: false,
                   retention: false,
                   retentionDate: .init(),
+                  intro: "test-intro",
                   text: "Test message",
                   html: [],
                   hasAttachments: true,
@@ -220,14 +221,13 @@ class MTMessageServiceIntegrationTests: XCTestCase {
     // MARK: - deleteMessage Test Cases
 
     func test_deleteMessage_whenSuccess_returnsMTMessage() throws {
-        typealias ResultType = Result<MTMessage, MTError>
+        typealias ResultType = Result<MTEmptyResult, MTError>
 
         // given
         let givenId = "Asd312"
         let givenToken = "fakeToken"
-        let givenMessage = getMTMessage(id: givenId)
 
-        let givenSuccessResult: ResultType = .success(givenMessage)
+        let givenSuccessResult: ResultType = .success(.init())
 
         mockApi.givenResult(result: givenSuccessResult)
 
@@ -250,15 +250,16 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         XCTAssertNotNil(returnedResultOptional)
         let returnedResult = try XCTUnwrap(returnedResultOptional)
         switch returnedResult {
-        case .success(let result):
-            XCTAssertEqual(result.id, givenMessage.id)
+            case .success( _):
+            // success
+                break
         case .failure(let error):
             XCTFail(error.localizedDescription)
         }
     }
 
     func test_deleteMessage_whenFailure_returnsError() throws {
-        typealias ResultType = Result<MTMessage, MTError>
+        typealias ResultType = Result<MTEmptyResult, MTError>
 
         // given
         let givenId = "Asd312"
@@ -323,7 +324,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // then
         XCTAssertEqual(mockApi.endpoint, Endpoints.messagesFromId(givenId))
         XCTAssertEqual(mockApi.requestAuthToken, givenToken)
-        XCTAssertEqual(mockApi.headers, [:])
+        XCTAssertEqual(mockApi.headers, ["Content-Type": "application/merge-patch+json"])
         XCTAssertEqual(mockApi.requestMethod, .patch)
         XCTAssertEqual(mockApi.requestCallCount, 1)
         XCTAssertEqual(mockTask.cancelCallCount, 0)
@@ -364,7 +365,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // then
         XCTAssertEqual(mockApi.endpoint, Endpoints.messagesFromId(givenId))
         XCTAssertEqual(mockApi.requestAuthToken, givenToken)
-        XCTAssertEqual(mockApi.headers, [:])
+        XCTAssertEqual(mockApi.headers, ["Content-Type": "application/merge-patch+json"])
         XCTAssertEqual(mockApi.requestMethod, .patch)
         XCTAssertEqual(mockApi.requestCallCount, 1)
         XCTAssertEqual(mockTask.cancelCallCount, 0)

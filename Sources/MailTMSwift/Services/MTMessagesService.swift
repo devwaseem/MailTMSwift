@@ -47,12 +47,12 @@ open class MTMessageService {
         }
     }
     @discardableResult
-    public func deleteMessage(token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
+    public func deleteMessage(token: String, id: String, completion: @escaping (Result<MTEmptyResult, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .delete,
                            endpoint: Endpoints.messagesFromId(id),
                            authToken: token,
                            headers: [:],
-                           body: EmptyBody(),
+                           body: MTEmptyBody(),
                            completion: completion)
     }
 
@@ -111,12 +111,12 @@ open class MTMessageService {
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
-    public func deleteMessage(token: String, id: String) -> AnyPublisher<MTMessage, MTError> {
+    public func deleteMessage(token: String, id: String) -> AnyPublisher<MTEmptyResult, MTError> {
         apiService.request(method: .delete,
                            endpoint: Endpoints.messagesFromId(id),
                            authToken: token,
                            headers: [:],
-                           body: EmptyBody())
+                           body: MTEmptyBody())
     }
 
     @available(macOS 10.15, *)
