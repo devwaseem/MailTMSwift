@@ -23,7 +23,9 @@ open class MTLiveMailService {
     private var eventSource: EventSource?
 
     public var statePublisher: AnyPublisher<MTLiveMailService.State, Never> {
-        $state.eraseToAnyPublisher()
+        $state
+            .receive(on: DispatchQueue.main, options: .init(qos: .utility))
+            .eraseToAnyPublisher()
     }
 
     @Published private var state = State.closed
