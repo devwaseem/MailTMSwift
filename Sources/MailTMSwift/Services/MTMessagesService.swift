@@ -23,8 +23,7 @@ open class MTMessageService {
     }
 
     @discardableResult
-    public func getAllMessages(token: String,
-                               page: Int = 1,
+    public func getAllMessages(page: Int = 1, token: String,
                                completion: @escaping (Result<[MTMessage], MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         guard var urlComponent = URLComponents(string: Endpoints.messages) else {
             completion(.failure(.networkError("Invalid URL: \(Endpoints.messages)")))
@@ -47,7 +46,7 @@ open class MTMessageService {
         }
     }
     @discardableResult
-    public func deleteMessage(token: String, id: String, completion: @escaping (Result<MTEmptyResult, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
+    public func deleteMessage(id: String, token: String, completion: @escaping (Result<MTEmptyResult, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .delete,
                            endpoint: Endpoints.messagesFromId(id),
                            authToken: token,
@@ -62,9 +61,9 @@ open class MTMessageService {
     }
 
     @discardableResult
-    public func markMessageAs(seen: Bool,
+    public func markMessageAs(id: String,
+                              seen: Bool,
                               token: String,
-                              id: String,
                               completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .patch,
                            endpoint: Endpoints.messagesFromId(id),
@@ -74,12 +73,19 @@ open class MTMessageService {
                            completion: completion)
     }
     
+    @discardableResult
+    public func getSource(id: String,
+                          token: String,
+                          completion: @escaping (Result<MTMessageSource, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
+        apiService.get(endpoint: Endpoints.sourcesFromId(id), authToken: token, headers: [:], completion: completion)
+    }
+    
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
-    public func getAllMessages(token: String,
-                               page: Int = 1) -> AnyPublisher<[MTMessage], MTError> {
+    public func getAllMessages(page: Int = 1,
+                               token: String) -> AnyPublisher<[MTMessage], MTError> {
         guard var urlComponent = URLComponents(string: Endpoints.messages) else {
             return Deferred {
                 Future { promise in
@@ -111,7 +117,7 @@ open class MTMessageService {
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
-    public func deleteMessage(token: String, id: String) -> AnyPublisher<MTEmptyResult, MTError> {
+    public func deleteMessage(id: String, token: String) -> AnyPublisher<MTEmptyResult, MTError> {
         apiService.request(method: .delete,
                            endpoint: Endpoints.messagesFromId(id),
                            authToken: token,
@@ -123,7 +129,7 @@ open class MTMessageService {
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
-    public func getMessage(token: String, id: String) -> AnyPublisher<MTMessage, MTError> {
+    public func getMessage(id: String, token: String) -> AnyPublisher<MTMessage, MTError> {
         apiService.get(endpoint: Endpoints.messagesFromId(id), authToken: token, headers: [:])
     }
 
@@ -131,14 +137,23 @@ open class MTMessageService {
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
-    public func markMessageAs(seen: Bool,
-                              token: String,
-                              id: String) -> AnyPublisher<MTMessage, MTError> {
+    public func markMessageAs(id: String,
+                              seen: Bool,
+                              token: String) -> AnyPublisher<MTMessage, MTError> {
         apiService.request(method: .patch,
                            endpoint: Endpoints.messagesFromId(id),
                            authToken: token,
                            headers: ["Content-Type": "application/merge-patch+json"],
                            body: ["seen": seen])
+    }
+    
+    @available(macOS 10.15, *)
+    @available(iOS 13.0, *)
+    @available(watchOS 6.0, *)
+    @available(tvOS 13.0, *)
+    public func getSource(id: String,
+                          token: String) -> AnyPublisher<MTMessageSource, MTError> {
+        apiService.get(endpoint: Endpoints.sourcesFromId(id), authToken: token, headers: [:])
     }
 
 }

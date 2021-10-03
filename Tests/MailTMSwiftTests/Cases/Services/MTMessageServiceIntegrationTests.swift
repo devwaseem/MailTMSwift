@@ -75,7 +75,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // when
         let resultExpectation = expectation(description: "Did not return the result")
         var returnedResultOptional: ResultType?
-        sut.getAllMessages(token: givenToken, page: 1) {(result: ResultType) in
+        sut.getAllMessages(page: 1, token: givenToken) {(result: ResultType) in
             returnedResultOptional = result
             resultExpectation.fulfill()
         }
@@ -113,7 +113,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // when
         let resultExpectation = expectation(description: "Did not return the result")
         var returnedResultOptional: ResultType?
-        sut.getAllMessages(token: givenToken, page: 1) {(result: ResultType) in
+        sut.getAllMessages(page: 1, token: givenToken) {(result: ResultType) in
             returnedResultOptional = result
             resultExpectation.fulfill()
         }
@@ -234,7 +234,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // when
         let resultExpectation = expectation(description: "Did not return the result")
         var returnedResultOptional: ResultType?
-        sut.deleteMessage(token: givenToken, id: givenId) { (result: ResultType) in
+        sut.deleteMessage(id: givenId, token: givenToken) { (result: ResultType) in
             returnedResultOptional = result
             resultExpectation.fulfill()
         }
@@ -272,7 +272,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // when
         let resultExpectation = expectation(description: "Did not return the result")
         var returnedResultOptional: ResultType?
-        sut.deleteMessage(token: givenToken, id: givenId) {(result: ResultType) in
+        sut.deleteMessage(id: givenId, token: givenToken) {(result: ResultType) in
             returnedResultOptional = result
             resultExpectation.fulfill()
         }
@@ -316,7 +316,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // when
         let resultExpectation = expectation(description: "Did not return the result")
         var returnedResultOptional: ResultType?
-        sut.markMessageAs(seen: true, token: givenToken, id: givenId) { (result: ResultType) in
+        sut.markMessageAs(id: givenId, seen: true, token: givenToken) { (result: ResultType) in
             returnedResultOptional = result
             resultExpectation.fulfill()
         }
@@ -357,7 +357,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // when
         let resultExpectation = expectation(description: "Did not return the result")
         var returnedResultOptional: ResultType?
-        sut.markMessageAs(seen: true, token: givenToken, id: givenId) {(result: ResultType) in
+        sut.markMessageAs(id: givenId, seen: true, token: givenToken) {(result: ResultType) in
             returnedResultOptional = result
             resultExpectation.fulfill()
         }

@@ -13,7 +13,6 @@ enum APIRequestMethod: String {
     case post = "POST"
     case patch = "PATCH"
     case delete = "DELETE"
-
 }
 
 struct MTEmptyBody: Encodable {}
