@@ -108,7 +108,7 @@ public struct MTMessage: Codable {
 
 public struct MTAttachment: Codable {
 
-    public let id, filename, contentType, disposition: String
+    public var id, filename, contentType, disposition: String
     public let transferEncoding: String
     public let related: Bool
     public let size: Int
