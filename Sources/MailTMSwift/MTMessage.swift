@@ -108,7 +108,7 @@ public struct MTMessage: Codable {
 
 public struct MTAttachment: Codable {
 
-    public var id, filename, contentType, disposition: String
+    public var localId, filename, contentType, disposition: String
     public let transferEncoding: String
     public let related: Bool
     public let size: Int
@@ -122,7 +122,7 @@ public struct MTAttachment: Codable {
                 related: Bool,
                 size: Int,
                 downloadURL: String) {
-        self.id = id
+        self.localId = id
         self.filename = filename
         self.contentType = contentType
         self.disposition = disposition
@@ -133,8 +133,10 @@ public struct MTAttachment: Codable {
     }
 
     enum CodingKeys: String, CodingKey {
-        case id, filename, contentType, disposition, transferEncoding, related, size
+        // Server returned ID is not unique. Still we save the returned ID for other purposes.
+        case localId = "id"
         case downloadURL = "downloadUrl"
+        case filename, contentType, disposition, transferEncoding, related, size
     }
 }
 
@@ -178,6 +180,10 @@ extension MTMessage: Hashable, Identifiable {
 }
 
 extension MTAttachment: Hashable, Identifiable {
+    
+    public var id: Int {
+        hashValue
+    }
 
     public static func == (lhs: MTAttachment, rhs: MTAttachment) -> Bool {
         lhs.id == rhs.id
