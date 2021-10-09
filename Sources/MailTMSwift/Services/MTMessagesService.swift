@@ -155,5 +155,16 @@ open class MTMessageService {
                           token: String) -> AnyPublisher<MTMessageSource, MTError> {
         apiService.get(endpoint: Endpoints.sourcesFromId(id), authToken: token, headers: [:])
     }
+    
+    public func getSourceRequest(id: String, token: String) -> URLRequest? {
+        guard let url = URL(string: Endpoints.sourcesFromId(id)) else {
+            return nil
+        }
+        
+        var request = URLRequest(url: url)
+        request.allHTTPHeaderFields = ["Authorization": "Bearer \(token)"]
+        request.httpMethod = "GET"
+        return request
+    }
 
 }
