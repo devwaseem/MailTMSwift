@@ -23,7 +23,6 @@ open class MTDomainService {
                                      decoder: MTJSONDecoder())
     }
 
-    
     /// Get all domains that [Mail.tm](https://mail.tm) offers
     /// - Parameter completion: when successful, returns a `Result` type with the list of ``MTDomain`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request

@@ -44,7 +44,6 @@ open class MTAccountService {
         }
     }
 
-    
     /// Creates an account using address and password
     /// - Parameters:
     ///   - auth: ``MTAuth`` struct which holds address and password
