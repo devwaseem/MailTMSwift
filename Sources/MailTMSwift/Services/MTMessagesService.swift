@@ -26,7 +26,7 @@ open class MTMessageService {
     /// - Parameters:
     ///   - page: pagination page number
     ///   - token: account JWT token
-    ///   - completion: when successful, returns a completion handler `Result` type of ``[MTMessage]`` and ``MTError`` if some error occurred
+    ///   - completion: when successful, returns a completion handler `Result` type of array of``MTMessage`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
     /// - Note: Messages received will not be complete. Use the retreived messages to show a list of messages.
     ///         To retreive the complete message, use ``MTMessageService/getMessage(id:token:)``.
@@ -224,7 +224,7 @@ open class MTMessageService {
     /// - Parameters:
     ///   - id: message id
     ///   - token: account JWT Token
-    /// - Returns: ``URLRequest`` configured to retreive message source.
+    /// - Returns: `URLRequest` configured to retreive message source.
     /// - Note: This method will return nil, if the message source url is nil.
     public func getSourceRequest(id: String, token: String) -> URLRequest? {
         guard let url = URL(string: Endpoints.sourcesFromId(id)) else {
