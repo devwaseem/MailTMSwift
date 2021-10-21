@@ -1,4 +1,5 @@
 # MailTMSwift
+
 <p align="center">
 <a href="https://github.com/devwaseem/MailTMSwift/actions/workflows/swift.yml"><img src="https://github.com/devwaseem/MailTMSwift/actions/workflows/swift.yml/badge.svg"></a>
 <a href="https://"><img src="https://img.shields.io/github/v/release/devwaseem/MailTMSwift?display_name=tag"></a>
@@ -12,11 +13,10 @@
 
 <p align="center">MailTMSwift is a Lightweight Swift Wrapper for https://mail.tm API (A Temp Mail Service).</p>
   
-The api is documented [here](https://api.mail.tm/)
-
 ## Documentation
 
-Documentation is generated from Apple's DocC and is hosted on [here](https://mailtmswift.waseem.works)
+- Documentation is generated from Apple's DocC and is hosted on [here](https://mailtmswift.waseem.works)
+- The mail.tm api is documented [here](https://api.mail.tm/)
 
 ## Installation
 
