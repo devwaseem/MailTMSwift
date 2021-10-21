@@ -34,6 +34,3 @@ struct HydraTypeResult: Codable {
         case type = "@type"
     }
 }
-
-// randommmmm@uniromax.com
-// helo12312312

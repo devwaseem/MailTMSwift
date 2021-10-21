@@ -22,6 +22,14 @@ open class MTMessageService {
                                      decoder: MTJSONDecoder())
     }
 
+    /// Retrieve all Messages for an account
+    /// - Parameters:
+    ///   - page: pagination page number
+    ///   - token: account JWT token
+    ///   - completion: when successful, returns a completion handler `Result` type of ``[MTMessage]`` and ``MTError`` if some error occurred
+    /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    /// - Note: Messages received will not be complete. Use the retreived messages to show a list of messages.
+    ///         To retreive the complete message, use ``MTMessageService/getMessage(id:token:)``.
     @discardableResult
     public func getAllMessages(page: Int = 1, token: String,
                                completion: @escaping (Result<[MTMessage], MTError>) -> Void) -> MTAPIServiceTaskProtocol {
@@ -45,6 +53,14 @@ open class MTMessageService {
             }
         }
     }
+    
+    /// Delete a message
+    /// - Parameters:
+    ///   - id: message id
+    ///   - token: account JWT token
+    ///   - completion: when successful, returns a completion handler `Result` type of ``MTEmptyResult`` and ``MTError`` if some error occurred
+    /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    /// - Note: When a message is successfully deleted, the server sends a empty response.
     @discardableResult
     public func deleteMessage(id: String, token: String, completion: @escaping (Result<MTEmptyResult, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .delete,
@@ -55,11 +71,24 @@ open class MTMessageService {
                            completion: completion)
     }
 
+    /// Retrieve a message using its id
+    /// - Parameters:
+    ///   - id: message id
+    ///   - token: account JWT token
+    ///   - completion: when successful, returns a completion handler `Result` type of ``MTMessage`` and ``MTError`` if some error occurred
+    /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
     @discardableResult
-    public func getMessage(token: String, id: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
+    public func getMessage(id: String, token: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.messagesFromId(id), authToken: token, headers: [:], completion: completion)
     }
 
+    /// Mark message as seen/unseen
+    /// - Parameters:
+    ///   - id: message id
+    ///   - seen: a boolean indicating seen/unseen
+    ///   - token: account JWT Token
+    ///   - completion: when successful, returns a completion handler `Result` type of ``MTMessage`` and ``MTError`` if some error occurred
+    /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
     @discardableResult
     public func markMessageAs(id: String,
                               seen: Bool,
@@ -73,6 +102,12 @@ open class MTMessageService {
                            completion: completion)
     }
     
+    /// Get source for a message.
+    /// - Parameters:
+    ///   - id: message id
+    ///   - token: account JWT token
+    ///   - completion: when successful, returns a completion handler `Result` type of ``MTMessageSource`` and ``MTError`` if some error occurred
+    /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
     @discardableResult
     public func getSource(id: String,
                           token: String,
@@ -80,6 +115,13 @@ open class MTMessageService {
         apiService.get(endpoint: Endpoints.sourcesFromId(id), authToken: token, headers: [:], completion: completion)
     }
     
+    /// Retrieve all Messages for an account
+    /// - Parameters:
+    ///   - page: pagination page number
+    ///   - token: account JWT token
+    /// - Returns: A publisher that emits an array of ``MTMessage`` when the messages for given account is successfully retreived.
+    /// - Note: Messages received will not be complete. Use the retreived messages to show a list of messages.
+    ///         To retreive the complete message, use ``MTMessageService/getMessage(id:token:)``.
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -113,6 +155,12 @@ open class MTMessageService {
             .eraseToAnyPublisher()
     }
     
+    /// Delete a message
+    /// - Parameters:
+    ///   - id: message id
+    ///   - token: account JWT token
+    /// - Returns: A publisher that emits ``MTEmptyResult`` when account is deleted successfully.
+    /// - Note: When a message is successfully deleted, the server sends a empty response.
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -125,6 +173,11 @@ open class MTMessageService {
                            body: MTEmptyBody())
     }
 
+    /// Retrieve a message using its id
+    /// - Parameters:
+    ///   - id: message id
+    ///   - token: account JWT token
+    /// - Returns: A publisher that emits ``MTMessage`` when the message is retreived successfully.
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -137,6 +190,12 @@ open class MTMessageService {
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
     @available(tvOS 13.0, *)
+    /// Mark message as seen/unseen
+    /// - Parameters:
+    ///   - id: message id
+    ///   - seen: a boolean indicating seen/unseen
+    ///   - token: account JWT Token
+    /// - Returns: A publisher that emits ``MTMessage`` when the message is updated successfully.
     public func markMessageAs(id: String,
                               seen: Bool,
                               token: String) -> AnyPublisher<MTMessage, MTError> {
@@ -147,6 +206,11 @@ open class MTMessageService {
                            body: ["seen": seen])
     }
     
+    /// Get source for a message.
+    /// - Parameters:
+    ///   - id: message id
+    ///   - token: account JWT token
+    /// - Returns: A publisher that emits ``MTMessageSource`` when the message source is retreived successfully.
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -156,6 +220,12 @@ open class MTMessageService {
         apiService.get(endpoint: Endpoints.sourcesFromId(id), authToken: token, headers: [:])
     }
     
+    /// Get `URLRequest` for message source.
+    /// - Parameters:
+    ///   - id: message id
+    ///   - token: account JWT Token
+    /// - Returns: ``URLRequest`` configured to retreive message source.
+    /// - Note: This method will return nil, if the message source url is nil.
     public func getSourceRequest(id: String, token: String) -> URLRequest? {
         guard let url = URL(string: Endpoints.sourcesFromId(id)) else {
             return nil

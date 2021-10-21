@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  APIService.swift
 //  
 //
 //  Created by Waseem Akram on 15/09/21.
@@ -15,8 +15,10 @@ enum APIRequestMethod: String {
     case delete = "DELETE"
 }
 
+/// Used to encode empty body
 struct MTEmptyBody: Encodable {}
 
+/// Used to decode empty reponse from server response
 public struct MTEmptyResult: Decodable { public init() {} }
 
 typealias APIResultClosure<T> = (Result<T, MTError>) -> Void

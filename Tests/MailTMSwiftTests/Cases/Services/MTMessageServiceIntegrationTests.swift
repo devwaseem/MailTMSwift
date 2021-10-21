@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  MTMessageServiceIntegrationTests.swift
 //  
 //
 //  Created by Waseem Akram on 16/09/21.
@@ -156,7 +156,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // when
         let resultExpectation = expectation(description: "Did not return the result")
         var returnedResultOptional: ResultType?
-        sut.getMessage(token: givenToken, id: givenId) { (result: ResultType) in
+        sut.getMessage(id: givenId, token: givenToken) { (result: ResultType) in
             returnedResultOptional = result
             resultExpectation.fulfill()
         }
@@ -192,7 +192,7 @@ class MTMessageServiceIntegrationTests: XCTestCase {
         // when
         let resultExpectation = expectation(description: "Did not return the result")
         var returnedResultOptional: ResultType?
-        sut.getMessage(token: givenToken, id: givenId) {(result: ResultType) in
+        sut.getMessage(id: givenId, token: givenToken) {(result: ResultType) in
             returnedResultOptional = result
             resultExpectation.fulfill()
         }

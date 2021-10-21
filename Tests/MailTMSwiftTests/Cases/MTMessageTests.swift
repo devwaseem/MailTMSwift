@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  MTMessageTests.swift
 //  
 //
 //  Created by Waseem Akram on 01/10/21.
@@ -134,7 +134,7 @@ class MTMessageTests: XCTestCase {
         XCTAssertEqual(decodedMessage.html?.count, 1)
         XCTAssertEqual(decodedMessage.hasAttachments, true)
         XCTAssertEqual(decodedMessage.attachments?.count, 1)
-        XCTAssertEqual(decodedMessage.attachments?[0].id, "ATTACH000001")
+        XCTAssertEqual(decodedMessage.attachments?[0].localId, "ATTACH000001")
         XCTAssertEqual(decodedMessage.attachments?[0].filename, "4375105_logo_swift_icon.svg")
         XCTAssertEqual(decodedMessage.attachments?[0].contentType, "image/svg+xml")
         XCTAssertEqual(decodedMessage.attachments?[0].disposition, "attachment")

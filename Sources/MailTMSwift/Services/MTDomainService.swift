@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// Helper class to retreive [Mail.tm](https://mail.tm) domains
 open class MTDomainService {
 
     private let apiService: APIServiceProtocol
@@ -22,6 +23,10 @@ open class MTDomainService {
                                      decoder: MTJSONDecoder())
     }
 
+    
+    /// Get all domains that [Mail.tm](https://mail.tm) offers
+    /// - Parameter completion: when successful, returns a `Result` type with the list of ``MTDomain`` and ``MTError`` if some error occurred
+    /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
     @discardableResult
     open func getAllDomains(completion: @escaping (Result<[MTDomain], MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.domains, authToken: nil, headers: [:]) { (result: Result<HydraWrapper<[MTDomain]>, MTError>) in
@@ -34,11 +39,18 @@ open class MTDomainService {
         }
     }
 
+    /// Get domains using id that [Mail.tm](https://mail.tm) offers
+    /// - Parameters:
+    ///   - id: domain id
+    ///   - completion: when successful, returns a `Result` type with ``MTDomain`` and ``MTError`` if some error occurred
+    /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
     @discardableResult
     open func getDomain(id: String, completion: @escaping (Result<MTDomain, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.domainFromId(id), authToken: nil, headers: [:], completion: completion)
     }
 
+    /// Get all domains that Mail.tm offers
+    /// - Returns: A publisher that emits array of ``MTDomain``.
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)
@@ -51,6 +63,9 @@ open class MTDomainService {
             .eraseToAnyPublisher()
     }
 
+    /// Get domains using id that [Mail.tm](https://mail.tm) offers
+    /// - Parameter id: domain id
+    /// - Returns: A publisher that emits ``MTDomain``.
     @available(macOS 10.15, *)
     @available(iOS 13.0, *)
     @available(watchOS 6.0, *)

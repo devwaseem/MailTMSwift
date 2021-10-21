@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  MTMessage.swift
 //  
 //
 //  Created by Waseem Akram on 16/09/21.
