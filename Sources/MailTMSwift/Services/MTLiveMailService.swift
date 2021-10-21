@@ -118,7 +118,6 @@ extension MTLiveMailService: EventHandler {
     }
 
     public func onMessage(eventType: String, messageEvent: MessageEvent) {
-        print(messageEvent)
         guard
             eventType == "message",
             let data = messageEvent.data.data(using: .utf8)
@@ -132,11 +131,11 @@ extension MTLiveMailService: EventHandler {
             if let type = HydraTypeResult.HydraTypeResult(rawValue: result.type) {
                 dataType = type
             } else {
-                print("Unknown type: \(result.type)")
+                print("[MTLiveMailService] Unknown type: \(result.type)")
                 return
             }
         } catch {
-            print(error)
+            print("[MTLiveMailService], Error: ", error)
             return
         }
         
@@ -147,15 +146,15 @@ extension MTLiveMailService: EventHandler {
                 _accountPublisher.send(account)
                 return
             } catch {
-                print(error)
+                print("[MTLiveMailService], Error: ", error)
             }
         case .message:
             do {
                 let message = try decoder.decode(MTMessage.self, from: data)
                 _messagePublisher.send(message)
                 return
-            } catch let error {
-                print(error)
+            } catch {
+                print("[MTLiveMailService], Error: ", error)
             }
         }
     }
@@ -165,7 +164,7 @@ extension MTLiveMailService: EventHandler {
     }
 
     public func onError(error: Error) {
-        print(error)
+        print("[MTLiveMailService], Error: ", error)
     }
 
 }
