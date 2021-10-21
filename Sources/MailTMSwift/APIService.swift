@@ -193,6 +193,7 @@ public protocol MTAPIServiceTaskProtocol {
     func cancel()
 }
 
+/// Wrapper class for URLSessionDataTask, provided to cancel the ongoing api request
 public final class MTAPIServiceTask: MTAPIServiceTaskProtocol {
     private let sessionTask: URLSessionDataTask
 
@@ -208,7 +209,7 @@ public final class MTAPIServiceTask: MTAPIServiceTaskProtocol {
     }
 }
 
-public final class APIPlaceholderServiceTask: MTAPIServiceTaskProtocol {
+final class APIPlaceholderServiceTask: MTAPIServiceTaskProtocol {
 
     public var taskId: UUID = UUID()
 

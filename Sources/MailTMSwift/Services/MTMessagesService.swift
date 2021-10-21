@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 
+/// Helper class to work with [Mail.tm](https://mail.tm) messages
 open class MTMessageService {
 
     private let apiService: APIServiceProtocol
