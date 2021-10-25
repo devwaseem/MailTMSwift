@@ -29,8 +29,23 @@ open class MTMessageService {
     ///   - token: account JWT token
     ///   - completion: when successful, returns a completion handler `Result` type of array of``MTMessage`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
-    /// - Note: Messages received will not be complete. Use the retreived messages to show a list of messages.
-    ///         To retreive the complete message, use ``MTMessageService/getMessage(id:token:)``.
+    ///
+    /// Example:
+    /// ```swift
+    /// let messageService = MTMessageService()
+    /// let token = // Account JWT token
+    /// messageService.getAllMessages(token: token) { (result: Result<[MTMessage], MTError>) in
+    ///     switch result {
+    ///       case .success(let messages):
+    ///             for message in messages {
+    ///                 print("Message: \(message)")
+    ///             }
+    ///       case .failure(let error):
+    ///         print("Error occurred \(error)")
+    ///     }
+    /// }
+    /// ```
+    /// - Note: The messages returned by this method does not contain complete information, because it is intended to list the messages as list. To fetch the complete message with the complete information, use ``MTMessageService/getMessage(id:token:)``
     @discardableResult
     public func getAllMessages(page: Int = 1, token: String,
                                completion: @escaping (Result<[MTMessage], MTError>) -> Void) -> MTAPIServiceTaskProtocol {
@@ -61,6 +76,22 @@ open class MTMessageService {
     ///   - token: account JWT token
     ///   - completion: when successful, returns a completion handler `Result` type of ``MTEmptyResult`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    /// ```swift
+    /// let messageService = MTMessageService()
+    /// let id = // Message ID
+    /// let token = // Account JWT token
+    /// messageService.deleteMessage(id: id, token: token) { (result: Result<MTEmptyResult, MTError>) in
+    ///     if case let .failure(error) = result {
+    ///         print("Error Occurred: \(error)")
+    ///         return
+    ///     }
+    ///
+    ///     // Message deleted
+    ///     doSomethingAfterDelete()
+    /// }
+    /// ```
     /// - Note: When a message is successfully deleted, the server sends a empty response.
     @discardableResult
     public func deleteMessage(id: String, token: String, completion: @escaping (Result<MTEmptyResult, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
@@ -78,6 +109,21 @@ open class MTMessageService {
     ///   - token: account JWT token
     ///   - completion: when successful, returns a completion handler `Result` type of ``MTMessage`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    /// ```swift
+    /// let messageService = MTMessageService()
+    /// let id = // Message ID
+    /// let token = // Account JWT token
+    /// messageService.getMessage(id: id, token: token) { (result: Result<MTMessage, MTError>) in
+    ///     switch result {
+    ///       case .success(let message):
+    ///         print("Complete message: \(message)")
+    ///       case .failure(let error):
+    ///         print("Error occurred \(error)")
+    ///     }
+    /// }
+    /// ```
     @discardableResult
     public func getMessage(id: String, token: String, completion: @escaping (Result<MTMessage, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.messagesFromId(id), authToken: token, headers: [:], completion: completion)
@@ -90,6 +136,21 @@ open class MTMessageService {
     ///   - token: account JWT Token
     ///   - completion: when successful, returns a completion handler `Result` type of ``MTMessage`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    /// ```swift
+    /// let messageService = MTMessageService()
+    /// let id = // Message ID
+    /// let token = // Account JWT token
+    /// messageService.markMessageAs(id: id, seen: true, token: token) { (result: Result<MTMessage, MTError>) in
+    ///     switch result {
+    ///       case .success(let message):
+    ///         print("Updated message: \(message)")
+    ///       case .failure(let error):
+    ///         print("Error occurred \(error)")
+    ///     }
+    /// }
+    /// ```
     @discardableResult
     public func markMessageAs(id: String,
                               seen: Bool,
@@ -109,6 +170,22 @@ open class MTMessageService {
     ///   - token: account JWT token
     ///   - completion: when successful, returns a completion handler `Result` type of ``MTMessageSource`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    ///
+    /// ```swift
+    /// let messageService = MTMessageService()
+    /// let id = // Message ID
+    /// let token = // Account JWT token
+    /// messageService.getSource(id: id, token: token) { (result: Result<MTMessageSource, MTError>) in
+    ///     switch result {
+    ///       case .success(let messageSource):
+    ///         print("Message source: \(messageSource)")
+    ///       case .failure(let error):
+    ///         print("Error occurred \(error)")
+    ///     }
+    /// }
+    /// ```
     @discardableResult
     public func getSource(id: String,
                           token: String,
@@ -226,6 +303,17 @@ open class MTMessageService {
     ///   - id: message id
     ///   - token: account JWT Token
     /// - Returns: `URLRequest` configured to retreive message source.
+    ///
+    /// If the size of message is big and you wish to use a downloadTask from URLSession, you can do so manually by using the URLRequest object returned by:
+    /// ```swift
+    /// let messageService = MTMessageService()
+    /// let id = // Message ID
+    /// let token = // Account JWT token
+    /// let urlRequest = messageService.getSourceRequest(id: id, token: token)
+    /// let task = URLSession.shared.downloadTask(with: request)
+    /// // handle download task
+    /// ```
+    ///
     /// - Note: This method will return nil, if the message source url is nil.
     public func getSourceRequest(id: String, token: String) -> URLRequest? {
         guard let url = URL(string: Endpoints.sourcesFromId(id)) else {

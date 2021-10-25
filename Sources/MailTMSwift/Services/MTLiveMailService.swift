@@ -10,11 +10,22 @@ import Combine
 import LDSwiftEventSource
 
 /// A service class to listen for live create/update events for Accounts and Messages.
+///
+/// Example:
+/// ```swift
+/// import MailTMSwift
+/// import Combine
+///
+/// let subscriptions = Set<AnyCancellable>()
+/// let token = // Account JWT token
+/// let id = // Account id
+/// let liveMailService = MTLiveMailService(token: token, accountId: id)
+/// ```
+///
 /// - Note: Internally it uses SSE events to listen for live events
 @available(macOS 10.15, *)
 @available(iOS 13.0, *)
 @available(watchOS 6.0, *)
-@available(tvOS 13.0, *)
 @available(tvOS 13.0, *)
 open class MTLiveMailService {
     
@@ -28,6 +39,17 @@ open class MTLiveMailService {
     private var eventSource: EventSource?
     
     /// A publisher that emits ``MTLiveMailService/State`` when the status of connection changes
+    ///
+    /// Example:
+    /// ```swift
+    /// liveMailService.statePublisher.sink { state in
+    ///  if state == .opened {
+    ///     print("Connected to server")
+    ///  } else {
+    ///     print("Disconnected to server")
+    ///  }
+    /// }.store(in: &subscriptions)
+    /// ```
     public var statePublisher: AnyPublisher<MTLiveMailService.State, Never> {
         $state
             .receive(on: DispatchQueue.main, options: .init(qos: .utility))
@@ -37,6 +59,14 @@ open class MTLiveMailService {
     @Published private var state = State.closed
 
     /// A publisher that emits ``MTMessage`` when the message is received/deleted/updated
+    ///
+    /// Example:
+    /// ```swift
+    ///  liveMailService.messagePublisher.sink { message in
+    ///      print("Received message event: \(message)")
+    ///  }
+    ///  .store(in: &subscriptions)
+    /// ```
     public var messagePublisher: AnyPublisher<MTMessage, Never> {
         _messagePublisher
             .receive(on: DispatchQueue.main, options: .init(qos: .utility))
@@ -44,6 +74,14 @@ open class MTLiveMailService {
     }
     
     /// A publisher that emits ``MTAccount`` when account is updated.
+    ///
+    /// Example:
+    /// ```swift
+    /// liveMailService.accountPublisher.sink { account in
+    ///        print("Received account event: \(account)")
+    /// }
+    /// .store(in: &subscriptions)
+    /// ```
     public var accountPublisher: AnyPublisher<MTAccount, Never> {
         _accountPublisher
             .receive(on: DispatchQueue.main, options: .init(qos: .utility))
@@ -59,7 +97,7 @@ open class MTLiveMailService {
     private let accountId: String
     
     /// Retry the listener automatically when the connection goes off
-    /// - Note: Default is true
+    /// - Note: Default is false
     var autoRetry = false
     
     /// Create a new instance

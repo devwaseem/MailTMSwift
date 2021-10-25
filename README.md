@@ -265,7 +265,13 @@ messageService.deleteMessage(id: id, token: token) { (result: Result<MTEmptyResu
 
 [`MTLiveMailService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtlivemailservice) uses Apple's Combine framework to listen for live events. Make sure you use the required minimum version of the platform you're using this package.
 
-> 
+### Requirements
+
+| Platform | Minimum required version   |
+| iOS      | 13.0+                      |
+| macOS    | 10.15+                     |
+| watchOS  | 6.0+                       |
+| tvOS     | 13.0+                      |
 
 ### Setup
 
