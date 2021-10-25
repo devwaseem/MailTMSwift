@@ -26,13 +26,16 @@
 - Add `https://github.com/devwaseem/MailTMSwift.git`
 - Select "Up to Next Major" with "1.1.1"
 
-## Supported platforms
-| Platform | Supported versions |
-| -------- | ------------------ |
-| iOS      | 11+                |
-| MacOS    | 10.12+             |
-| watchOS  | 4+                 |
-| tvOS     | 11+                |
+## Requirements
+
+Swift: 5.0
+
+| Platform | Minimum required version |
+| -------- | ------------------------ |
+| iOS      | 11.0                     |
+| macOS    | 10.12                    |
+| watchOS  | 4.0                      |
+| tvOS     | 11.0                     |
 
 ## Highlights
 🕹 Simple interface
@@ -245,6 +248,103 @@ messageService.deleteMessage(id: id, token: token) { (result: Result<MTEmptyResu
     doSomethingAfterDelete()
 }
 ```
+
+## 🚥 Live Events
+
+[`MTLiveMailService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtlivemailservice) uses Apple's Combine framework to listen for live events. Make sure you use the required minimum version of the platform you're using this package.
+
+> 
+
+### Setup
+
+```swift
+import MailTMSwift
+import Combine
+
+let subscriptions = Set<AnyCancellable>()
+let token = // Account JWT token
+let id = // Account id
+let liveMailService = MTLiveMailService(token: token, accountId: id)
+```
+
+### Listen for New / Updated messages
+
+```swift
+liveMailService.messagePublisher.sink { message in
+    print("Received message event: \(message)")
+}
+.store(in: &subscriptions)
+```
+
+### Listen for account updates
+
+```swift
+liveMailService.accountPublisher.sink { account in
+    print("Received account event: \(account)")
+}
+.store(in: &subscriptions)
+```
+
+### Listen for connection changes
+
+```swift
+liveMailService.statePublisher.sink { state in
+  if state == .opened {
+      print("Connected to server")
+  } else {
+      print("Disconnected to server")
+  }
+}
+.store(in: &subscriptions)
+```
+
+### Start the listener
+
+```swift
+liveMailService.start()
+```
+
+### Stop the listener
+
+```swift
+liveMailService.stop()
+```
+
+### Restart the listener
+
+```swift
+liveMailService.restart()
+```
+
+Enable `autoRetry` property to automatically restart the connection if the connection is lost in between.
+
+```swift
+liveMailService.autoRetry = true
+```
+
+## Contribute 🤝
+
+If you want to contribute to this library, you're always welcome!
+You can contribute by filing issues, bugs and PRs.
+
+### Contributing guidelines:
+- Open issue regarding proposed change.
+- Repo owner will contact you there.
+- If your proposed change is approved, Fork this repo and do changes.
+- Open PR against latest `development` branch. Add nice description in PR.
+- You're done!
+
+## ☕️ Donation
+
+If this project helped you in any way, you can give me a cup of coffee :).
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/iamwaseem99)
+
+## 📱 Contact
+
+Have an project? DM us at 👇
+
+Drop a mail to:- waseem07799@gmail.com
 
 ## License
 
