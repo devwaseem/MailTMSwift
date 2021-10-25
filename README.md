@@ -12,6 +12,11 @@
 </p>
 
 <p align="center">MailTMSwift is a Lightweight Swift Wrapper for https://mail.tm API (A Temp Mail Service).</p>
+
+## Used by
+[Tempbox](https://github.com/devwaseem/TempBox) - An opensource disposable email client for MacOS powered by [Mail.tm](https://mail.tm)
+
+[![Tempbox](https://user-images.githubusercontent.com/12982964/136702592-b793d676-fd61-41a9-aa61-1f459787999a.png)](https://github.com/devwaseem/TempBox)
   
 ## Documentation
 
@@ -268,6 +273,7 @@ messageService.deleteMessage(id: id, token: token) { (result: Result<MTEmptyResu
 ### Requirements
 
 | Platform | Minimum required version   |
+| -------- | -------------------------- |
 | iOS      | 13.0+                      |
 | macOS    | 10.15+                     |
 | watchOS  | 6.0+                       |
