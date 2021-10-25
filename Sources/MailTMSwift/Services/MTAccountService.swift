@@ -28,6 +28,20 @@ open class MTAccountService {
     ///   - auth: ``MTAuth`` struct which holds address and password
     ///   - completion: when successful, returns a `Result` type with JWT token string and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    ///```swift
+    ///let auth = MTAuth(address: "address@domain.com", password: "12345678")
+    ///let accountService = MTAccountService()
+    ///accountService.login(using: auth) { (result: Result<String, MTError>) in
+    ///  switch result {
+    ///    case .success(let token):
+    ///      print("got JWT: \(token)")
+    ///    case .failure(let error):
+    ///      print("Error occurred \(error)")
+    ///  }
+    ///}
+    ///```
     @discardableResult
     open func login(using auth: MTAuth, completion: @escaping (Result<String, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(method: .post,
@@ -49,6 +63,21 @@ open class MTAccountService {
     ///   - auth: ``MTAuth`` struct which holds address and password
     ///   - completion: when successful, returns a `Result` type with ``MTAccount`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    /// ```swift
+    /// let auth = MTAuth(address: "address@domain.com", password: "12345678")
+    /// let accountService = MTAccountService()
+    /// accountService.createAccount(using: auth) { (accountResult: Result<MTAccount, MTError>) in
+    /// switch accountResult {
+    ///     case .success(let account):
+    ///         print("Created an account \(account)")
+    ///     case .failure(let error):
+    ///       print("Error occurred \(error)")
+    ///   }
+    /// }
+    /// ```
+    /// - Note: This method returns account document but not JWT token. You need JWT token to authorize protected endpoints. To fetch JWT token, use ``MTAccountService/login(using:completion:)``
     @discardableResult
     open func createAccount(using auth: MTAuth, completion: @escaping (Result<MTAccount, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.request(
@@ -79,6 +108,23 @@ open class MTAccountService {
     ///   - token: JWT token
     ///   - completion: when successful, returns a `Result` type with ``MTEmptyResult`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    /// ```swift
+    /// let id = // Account ID
+    /// let token = // Account JWT token
+    /// let accountService = MTAccountService()
+    /// accountService.deleteAccount(id: id, token: token) { (result: Result<MTEmptyResult, MTError>) in
+    ///     if case let .failure(error) = result {
+    ///         print("Error Occurred: \(error)")
+    ///         return
+    ///     }
+    ///
+    ///     // Account deleted
+    ///     doSomethingAfterDelete()
+    /// }
+    /// ```
+    ///
     ///
     /// - Note: When deletion is successful, the API returns empty response which indicates successful operation.
     @discardableResult

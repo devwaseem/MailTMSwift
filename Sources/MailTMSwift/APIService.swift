@@ -193,7 +193,16 @@ public protocol MTAPIServiceTaskProtocol {
     func cancel()
 }
 
-/// Wrapper class for URLSessionDataTask, provided to cancel the ongoing api request
+/**
+ Wrapper class for URLSessionDataTask, provided to cancel the ongoing api request
+ 
+ You can call ``MTAPIServiceTask/cancel()`` method to cancel the ongoing API request.
+ ```swift
+ let task = messageService.deleteMessage(id: id, token: token) { ... }
+ // cancel request
+ task.cancel()
+ ```
+ */
 public final class MTAPIServiceTask: MTAPIServiceTaskProtocol {
     private let sessionTask: URLSessionDataTask
 
