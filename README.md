@@ -35,19 +35,19 @@
 | tvOS     | 11+                |
 
 ## Highlights
--[x] Simple interface
+🕹 Simple interface
 
--[x] Combine support
+🚥 Combine support
 
--[x] Live updates using SSE
+📡 Live updates using SSE
 
--[x] Cancel ongoing request
+🚧 Cancel ongoing request
 ## Getting started
 
 ### Introduction
 All the methods in this package support Combine. Retaining AnyCancellables will take care of canceling the ongoing API request when the retaining class is deinitialized. However, to cancel ongoing API requests when using completion handler supported methods, use [MTAPIServiceTask](https://mailtmswift.waseem.works/documentation/mailtmswift/mtapiservicetask).
 
-The Helper classes [`MTAccountService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtaccountservice), [`MTMessageService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtmessageservice), [`MTDomainService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtdomainservice) are _Stateless_ classes, so you are free to create multiple instances of it, without creating any side effects. If you use a dependency container, store the instance of the class and store it as `Application` or `Singleton` scope.
+The Helper classes [`MTAccountService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtaccountservice), [`MTMessageService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtmessageservice) and [`MTDomainService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtdomainservice) are _Stateless_ classes, so you are free to create multiple instances of it, without creating any side effects. If you use a dependency container, store the instance of the class and store it as `Application` or `Singleton` scope.
 
 ### Creating an account
 
@@ -97,20 +97,155 @@ let accountService = MTAccountService()
 accountService.deleteAccount(id: id, token: token) { (result: Result<MTEmptyResult, MTError>) in
     if case let .failure(error) = result {
         print("Error Occurred: \(error)")
+        return
     }
     
     // Account deleted
-    doSomething()
+    doSomethingAfterDelete()
 }
 ```
 
 ### Fetching available domains
+
+```swift
+import MailTMSwift
+
+let domainService = MTDomainService()
+domainService.getAllDomains { (result: Result<[MTDomain], MTError>) in
+    switch result {
+      case .success(let domains):
+        print("Available domains: \(domains)")
+      case .failure(let error):
+        print("Error occurred \(error)")
+    }
+}
+```
+
+To get details of a specific domain:
+
+```swift
+import MailTMSwift
+
+let id = ""
+domainService.getDomain(id: id) { (result: Result<MTDomain, MTError>) in
+    switch result {
+      case .success(let domains):
+        print("Available domains: \(domains)")
+      case .failure(let error):
+        print("Error occurred \(error)")
+    }
+}
+```
+
 ### Get all messages
+
+```swift
+import MailTMSwift
+
+let messageService = MTMessageService()
+let token = // Account JWT token
+messageService.getAllMessages(token: token) { (result: Result<[MTMessage], MTError>) in
+    switch result {
+      case .success(let messages):
+            for message in messages {
+                print("Message: \(message)")
+            }
+      case .failure(let error):
+        print("Error occurred \(error)")
+    }
+}
+```
+
+> The messages returned by `getAllMessages(token:)` does not contain complete information, because it is intended to list the messages as list. To fetch the complete message with the complete information, use [`getMessage(id:token:)`](#get-complete-message).
+
+### Get complete message
+
+```swift
+import MailTMSwift
+
+let messageService = MTMessageService()
+let id = // Message ID
+let token = // Account JWT token
+messageService.getMessage(id: id, token: token) { (result: Result<MTMessage, MTError>) in
+    switch result {
+      case .success(let message):
+        print("Complete message: \(message)")
+      case .failure(let error):
+        print("Error occurred \(error)")
+    }
+}
+```
+
+> Please see [Get all messages](#get-all-messages) before proceeding with this method.
+
 ### Mark message as seen
-### Get source of a message
-### Deleteing a message
-### Listening for live events
- 
+
+```swift
+import MailTMSwift
+
+let messageService = MTMessageService()
+let id = // Message ID
+let token = // Account JWT token
+messageService.markMessageAs(id: id, seen: true, token: token) { (result: Result<MTMessage, MTError>) in
+    switch result {
+      case .success(let message):
+        print("Updated message: \(message)")
+      case .failure(let error):
+        print("Error occurred \(error)")
+    }
+}
+```
+
+### Get the source of a message
+
+```swift
+import MailTMSwift
+
+let messageService = MTMessageService()
+let id = // Message ID
+let token = // Account JWT token
+messageService.getSource(id: id, token: token) { (result: Result<MTMessageSource, MTError>) in
+    switch result {
+      case .success(let messageSource):
+        print("Message source: \(messageSource)")
+      case .failure(let error):
+        print("Error occurred \(error)")
+    }
+}
+```
+
+If the size of message is big and you wish to use a downloadTask from `URLSession`, you can do so manually by using the `URLRequest` object returned by:
+
+```swift
+import MailTMSwift
+
+let messageService = MTMessageService()
+let id = // Message ID
+let token = // Account JWT token
+let urlRequest = messageService.getSourceRequest(id: id, token: token)
+let task = URLSession.shared.downloadTask(with: request)
+// handle download task
+```
+
+### Deleting a message
+
+```swift
+import MailTMSwift
+
+let messageService = MTMessageService()
+let id = // Message ID
+let token = // Account JWT token
+messageService.deleteMessage(id: id, token: token) { (result: Result<MTEmptyResult, MTError>) in
+    if case let .failure(error) = result {
+        print("Error Occurred: \(error)")
+        return
+    }
+    
+    // Message deleted
+    doSomethingAfterDelete()
+}
+```
+
 ## License
 
 MailTMSwift is released under the MIT license. See [LICENSE](https://raw.githubusercontent.com/devwaseem/MailTMSwift/main/LICENSE) for details.
