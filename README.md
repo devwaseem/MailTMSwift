@@ -141,11 +141,11 @@ To get details of a specific domain:
 ```swift
 import MailTMSwift
 
-let id = ""
+let id = // domain ID
 domainService.getDomain(id: id) { (result: Result<MTDomain, MTError>) in
     switch result {
-      case .success(let domains):
-        print("Available domains: \(domains)")
+      case .success(let domain):
+        print("Domain: \(domain)")
       case .failure(let error):
         print("Error occurred \(error)")
     }

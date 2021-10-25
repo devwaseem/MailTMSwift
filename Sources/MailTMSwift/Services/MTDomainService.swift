@@ -26,6 +26,19 @@ open class MTDomainService {
     /// Get all domains that [Mail.tm](https://mail.tm) offers
     /// - Parameter completion: when successful, returns a `Result` type with the list of ``MTDomain`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    /// ```swift
+    /// let domainService = MTDomainService()
+    /// domainService.getAllDomains { (result: Result<[MTDomain], MTError>) in
+    ///     switch result {
+    ///       case .success(let domains):
+    ///         print("Available domains: \(domains)")
+    ///       case .failure(let error):
+    ///         print("Error occurred \(error)")
+    ///     }
+    /// }
+    /// ```
     @discardableResult
     open func getAllDomains(completion: @escaping (Result<[MTDomain], MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.domains, authToken: nil, headers: [:]) { (result: Result<HydraWrapper<[MTDomain]>, MTError>) in
@@ -43,6 +56,20 @@ open class MTDomainService {
     ///   - id: domain id
     ///   - completion: when successful, returns a `Result` type with ``MTDomain`` and ``MTError`` if some error occurred
     /// - Returns: ServiceTask which can be used to cancel on-going http(s) request
+    ///
+    /// Example:
+    /// ```swift
+    /// import MailTMSwift
+    /// let id = // domain ID
+    /// domainService.getDomain(id: id) { (result: Result<MTDomain, MTError>) in
+    ///     switch result {
+    ///       case .success(let domain):
+    ///         print("Domain: \(domain)")
+    ///       case .failure(let error):
+    ///         print("Error occurred \(error)")
+    ///     }
+    /// }
+    /// ```
     @discardableResult
     open func getDomain(id: String, completion: @escaping (Result<MTDomain, MTError>) -> Void) -> MTAPIServiceTaskProtocol {
         apiService.get(endpoint: Endpoints.domainFromId(id), authToken: nil, headers: [:], completion: completion)
