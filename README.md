@@ -52,6 +52,18 @@ All the methods in this package support Combine. Retaining AnyCancellables will 
 
 The Helper classes [`MTAccountService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtaccountservice), [`MTMessageService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtmessageservice) and [`MTDomainService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtdomainservice) are _Stateless_ classes, so you are free to create multiple instances of it, without creating any side effects. If you use a dependency container, store the instance of the class and store it as `Application` or `Singleton` scope.
 
+### Cancel ongoing API Request
+
+Any non-combine methods of [`MTAccountService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtaccountservice), [`MTMessageService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtmessageservice) and [`MTDomainService`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtdomainservice) return [`MTAPIServiceTask`](https://mailtmswift.waseem.works/documentation/mailtmswift/mtapiservicetask). You can call `cancel()` method to cancel the ongoing API request.
+
+```swift
+
+let task = messageService.deleteMessage(id: id, token: token) { ... }
+
+// cancel request
+task.cancel()
+```
+
 ### Creating an account
 
 ```swift
