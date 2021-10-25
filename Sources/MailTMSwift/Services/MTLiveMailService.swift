@@ -59,8 +59,8 @@ open class MTLiveMailService {
     private let accountId: String
     
     /// Retry the listener automatically when the connection goes off
-    /// - Note: Default is false
-    let autoRetry = false
+    /// - Note: Default is true
+    var autoRetry = false
     
     /// Create a new instance
     /// - Parameters:
