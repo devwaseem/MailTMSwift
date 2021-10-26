@@ -2,7 +2,7 @@
 
 <p align="center">
 <a href="https://github.com/devwaseem/MailTMSwift/actions/workflows/swift.yml"><img src="https://github.com/devwaseem/MailTMSwift/actions/workflows/swift.yml/badge.svg"></a>
-<a href="https://"><img src="https://img.shields.io/github/v/release/devwaseem/MailTMSwift?display_name=tag"></a>
+<a href="https://github.com/devwaseem/MailTMSwift/releases/"><img src="https://img.shields.io/github/v/release/devwaseem/MailTMSwift?display_name=tag"></a>
 <a href="https://mailtmswift.waseem.works"><img src="https://img.shields.io/badge/Swift-Doc-DE5C43.svg?style=flat"></a>
 <a href="https://swift.org/package-manager/"><img src="https://img.shields.io/badge/SPM-supported-DE5C43.svg?style=flat"></a>
 <img src="https://img.shields.io/badge/Combine-supported-DE5C43.svg">
