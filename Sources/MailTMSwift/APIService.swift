@@ -131,51 +131,61 @@ final class APIService: APIServiceProtocol {
 
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }
-            if let error = error {
-                completion(.failure(MTError.networkError(error.localizedDescription)))
-                return
-            }
-            
-            guard let data = data else {
-                completion(.failure(MTError.networkError("Data recevied was empty")))
-                return
-            }
-
-            if let hydraError = try? self.decoder.decode(MTHydraError.self, from: data) {
-                completion(.failure(MTError.mtError(hydraError.hydraDescription)))
-                return
-            }
-
-            guard
-                let httpResponse = response as? HTTPURLResponse,
-                (200..<300) ~= httpResponse.statusCode
-            else {
-                completion(.failure(
-                    MTError.networkError(
-                        "Something went wrong: Status code \((response as? HTTPURLResponse)?.statusCode ?? 0), "
-                        + "Error: \(String(data: data, encoding: .utf8) ?? "")")
-                    )
-                )
-                return
-            }
-            
-            let correctedData: Data
-            if let rawString = String(data: data, encoding: .utf8), rawString == "" {
-                correctedData = "{}".data(using: .utf8) ?? data
-            } else {
-                correctedData = data
-            }
-
-            do {
-                let result = try self.decoder.decode(T.self, from: correctedData)
-                completion(.success(result))
-            } catch let decoderError {
-                let error = MTError.decodingError(decoderError.localizedDescription)
-                completion(.failure(error))
-            }
+			completion(self.handleAPIOutputCommon(data: data, response: response, error: error))
         }
     }
+	
+	#if swift(>=5.5)
+	#if canImport(_Concurrency)
+	@available(iOS 13.0, macOS 12.0, tvOS 13.0, watchOS 6.0, *)
+    @MainActor
+	internal func handleAPIOutputAsync<T: Decodable>(data: Data?, response: URLResponse?, error: Error?) async -> Result<T, MTError> {
+        handleAPIOutputCommon(data: data, response: response, error: error)
+	}
+	#endif
+	#endif
 
+	private func handleAPIOutputCommon<T: Decodable>(data: Data?, response: URLResponse?, error: Error?) -> Result<T, MTError> {
+		if let error = error {
+			return .failure(MTError.networkError(error.localizedDescription))
+		}
+	  
+		guard let data = data else {
+			return .failure(MTError.networkError("Data recevied was empty"))
+		}
+
+		if let hydraError = try? self.decoder.decode(MTHydraError.self, from: data) {
+			return .failure(MTError.mtError(hydraError.hydraDescription))
+		}
+
+		guard
+			let httpResponse = response as? HTTPURLResponse,
+			(200..<300) ~= httpResponse.statusCode
+		else {
+			return .failure(
+				MTError.networkError(
+					"Something went wrong: Status code \((response as? HTTPURLResponse)?.statusCode ?? 0), "
+					+ "Error: \(String(data: data, encoding: .utf8) ?? "")"
+				)
+			)
+		}
+	  
+		let correctedData: Data
+		if let rawString = String(data: data, encoding: .utf8), rawString == "" {
+			correctedData = "{}".data(using: .utf8) ?? data
+		} else {
+			correctedData = data
+		}
+
+		do {
+			let result = try self.decoder.decode(T.self, from: correctedData)
+			return .success(result)
+		} catch let decoderError {
+			let error = MTError.decodingError(decoderError.localizedDescription)
+			return .failure(error)
+		}
+	}
+	
     internal func bodyTypeRequest<T: Decodable>(request: URLRequest, completion: @escaping APIResultClosure<T>) -> MTAPIServiceTaskProtocol {
         let task = session.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }

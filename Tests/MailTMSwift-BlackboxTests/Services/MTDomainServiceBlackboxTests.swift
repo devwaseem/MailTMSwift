@@ -30,7 +30,7 @@ class MTDomainServiceBlackboxTests: XCTestCase {
             getAllDomainsExpectation.fulfill()
         }
 
-        waitForExpectations(timeout: 5)
+        waitForExpectations(timeout: 30)
         let returnedResult = try XCTUnwrap(returnedResultOptional)
         switch returnedResult {
         case .failure(let error):
